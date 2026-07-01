@@ -1,15 +1,34 @@
-import logo from './assets/logo.jpeg'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider, useAuth } from './contexts/AuthContext'
+import Login from './pages/Login'
+import Dashboard from './pages/Dashboard'
 
-function App() {
+function ProtectedRoute({ children }) {
+  const { user, loading } = useAuth()
+  if (loading) return <div className="min-h-screen flex items-center justify-center text-homie-blue">Loading...</div>
+  return user ? children : <Navigate to="/login" />
+}
+
+function AppRoutes() {
   return (
-    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-      <div className="text-center">
-        <img src={logo} alt="HomiePG" className="h-20 mx-auto mb-4" />
-        <h1 className="text-3xl font-bold text-homie-blue">HomiePG</h1>
-        <p className="text-homie-green mt-1">Owner Dashboard</p>
-      </div>
-    </div>
+    <Routes>
+      <Route path="/login" element={<Login />} />
+      <Route path="/dashboard" element={
+        <ProtectedRoute>
+          <Dashboard />
+        </ProtectedRoute>
+      } />
+      <Route path="*" element={<Navigate to="/login" />} />
+    </Routes>
   )
 }
 
-export default App
+export default function App() {
+  return (
+    <AuthProvider>
+      <BrowserRouter>
+        <AppRoutes />
+      </BrowserRouter>
+    </AuthProvider>
+  )
+}
