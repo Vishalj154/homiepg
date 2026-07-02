@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
+import BuildingDetail from './pages/BuildingDetail'
 import Buildings from './pages/Buildings'
 
 function ProtectedRoute({ children }) {
@@ -24,6 +25,12 @@ function AppRoutes() {
       <Route path="/buildings" element={
         <ProtectedRoute>
           <Buildings />
+        </ProtectedRoute>
+      } />
+
+      <Route path="/buildings/:id" element={
+        <ProtectedRoute>
+          <BuildingDetail />
         </ProtectedRoute>
       } />
     </Routes>

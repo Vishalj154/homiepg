@@ -1,0 +1,126 @@
+import React, { useState } from 'react'
+import { supabase } from '../lib/supabase'
+
+export default function FloorCard({ floor, buildingId, onUpdate }) {
+  const [showRoomForm, setShowRoomForm] = useState(false)
+  const [roomNumber, setRoomNumber] = useState('')
+  const [capacity, setCapacity] = useState(2)
+  const [rent, setRent] = useState('')
+
+  async function handleAddRoom(e) {
+    e.preventDefault()
+    try {
+      const { data: room, error: roomError } = await supabase.from('rooms').insert({
+        floor_id: floor.id,
+        building_id: buildingId,
+        room_number: roomNumber,
+        capacity: parseInt(capacity),
+        rent: parseFloat(rent) || 0,
+      }).select().single()
+
+      if (roomError) throw roomError
+
+      // auto-create beds based on capacity
+      const bedsToInsert = Array.from({ length: capacity }, (_, i) => ({
+        room_id: room.id,
+        building_id: buildingId,
+        bed_number: `${roomNumber}-${i + 1}`,
+        status: 'vacant',
+        rent: parseFloat(rent) || 0,
+      }))
+      const { error: bedsError } = await supabase.from('beds').insert(bedsToInsert)
+
+      if (bedsError) throw bedsError
+
+      setRoomNumber('')
+      setCapacity(2)
+      setRent('')
+      setShowRoomForm(false)
+      onUpdate()
+    } catch (error) {
+      console.error('Error adding room:', error.message)
+      alert('Error adding room: ' + error.message)
+    }
+  }
+
+  return (
+    <div className="bg-white rounded-xl shadow-sm p-5">
+      <div className="flex items-center justify-between mb-3">
+        <h3 className="font-semibold text-gray-700">
+          {floor.floor_name || `Floor ${floor.floor_number}`}
+        </h3>
+        <button
+          onClick={() => setShowRoomForm(!showRoomForm)}
+          className="text-sm text-homie-blue font-medium"
+        >
+          {showRoomForm ? 'Cancel' : '+ Add Room'}
+        </button>
+      </div>
+
+      {showRoomForm && (
+        <form onSubmit={handleAddRoom} className="flex gap-3 items-end mb-4 flex-wrap">
+          <div>
+            <label htmlFor="room-number" className="text-xs text-gray-500 block mb-1">Room No.</label>
+            <input
+              id="room-number"
+              value={roomNumber}
+              onChange={e => setRoomNumber(e.target.value)}
+              required
+              className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm w-24"
+            />
+          </div>
+          <div>
+            <label htmlFor="room-capacity" className="text-xs text-gray-500 block mb-1">Beds</label>
+            <input
+              id="room-capacity"
+              type="number"
+              min="1"
+              value={capacity}
+              onChange={e => setCapacity(e.target.value)}
+              className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm w-20"
+            />
+          </div>
+          <div>
+            <label htmlFor="room-rent" className="text-xs text-gray-500 block mb-1">Rent/bed</label>
+            <input
+              id="room-rent"
+              type="number"
+              value={rent}
+              onChange={e => setRent(e.target.value)}
+              className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm w-24"
+            />
+          </div>
+          <button type="submit" className="bg-homie-green text-white px-4 py-1.5 rounded-lg text-sm font-medium">
+            Add
+          </button>
+        </form>
+      )}
+
+      {floor.rooms?.length === 0 ? (
+        <p className="text-sm text-gray-400">No rooms yet.</p>
+      ) : (
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+          {floor.rooms?.map(room => (
+            <div key={room.id} className="border border-gray-100 rounded-lg p-3">
+              <p className="text-sm font-medium text-gray-700 mb-2">Room {room.room_number}</p>
+              <div className="flex flex-wrap gap-1.5">
+                {room.beds?.map(bed => (
+                  <span
+                    key={bed.id}
+                    className={`text-xs px-2 py-1 rounded ${
+                      bed.status === 'occupied'
+                        ? 'bg-red-100 text-red-600'
+                        : 'bg-green-100 text-green-600'
+                    }`}
+                  >
+                    🛏️ {bed.bed_number}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  )
+}

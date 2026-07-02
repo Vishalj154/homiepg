@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import Navbar from '../components/Navbar'
+import Sidebar from '../components/Sidebar'
+import TopBar from '../components/TopBar'
 
 export default function Dashboard() {
   const [stats, setStats] = useState({
@@ -38,49 +39,53 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
+    <div className="min-h-screen bg-gray-50 flex">
+      <Sidebar />
 
-      <div className="max-w-6xl mx-auto px-6 py-8">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">Dashboard</h1>
-        <p className="text-gray-500 text-sm mb-8">Welcome back! Here's your PG overview.</p>
+      <div className="flex-1">
+        <TopBar title="Dashboard" />
 
-        {loading ? (
-          <p className="text-gray-400">Loading stats...</p>
-        ) : (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-            <StatCard
-              label="Total Buildings"
-              value={stats.totalBuildings}
-              icon="🏢"
-              color="bg-blue-50 text-homie-blue"
-            />
-            <StatCard
-              label="Total Beds"
-              value={stats.totalBeds}
-              icon="🛏️"
-              color="bg-purple-50 text-purple-600"
-            />
-            <StatCard
-              label="Occupied"
-              value={stats.occupiedBeds}
-              icon="✅"
-              color="bg-green-50 text-homie-green"
-            />
-            <StatCard
-              label="Vacant"
-              value={stats.vacantBeds}
-              icon="🔓"
-              color="bg-orange-50 text-orange-500"
-            />
+        <div className="px-8 py-6">
+          <h1 className="text-2xl font-bold text-gray-800 mb-2">Dashboard</h1>
+          <p className="text-gray-500 text-sm mb-8">Welcome back! Here's your PG overview.</p>
+
+          {loading ? (
+            <p className="text-gray-400">Loading stats...</p>
+          ) : (
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+              <StatCard
+                label="Total Buildings"
+                value={stats.totalBuildings}
+                icon="🏢"
+                color="bg-blue-50 text-homie-blue"
+              />
+              <StatCard
+                label="Total Beds"
+                value={stats.totalBeds}
+                icon="🛏️"
+                color="bg-purple-50 text-purple-600"
+              />
+              <StatCard
+                label="Occupied"
+                value={stats.occupiedBeds}
+                icon="✅"
+                color="bg-green-50 text-homie-green"
+              />
+              <StatCard
+                label="Vacant"
+                value={stats.vacantBeds}
+                icon="🔓"
+                color="bg-orange-50 text-orange-500"
+              />
+            </div>
+          )}
+
+          <h2 className="text-lg font-semibold text-gray-700 mb-4">Quick Actions</h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <ActionCard icon="🏢" label="Manage Buildings" href="/buildings" />
+            <ActionCard icon="👥" label="Manage Tenants" href="/tenants" />
+            <ActionCard icon="💰" label="Expenses" href="/expenses" />
           </div>
-        )}
-
-        <h2 className="text-lg font-semibold text-gray-700 mb-4">Quick Actions</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          <ActionCard icon="🏢" label="Manage Buildings" href="/buildings" />
-          <ActionCard icon="👥" label="Manage Tenants" href="/tenants" />
-          <ActionCard icon="💰" label="Expenses" href="/expenses" />
         </div>
       </div>
     </div>
