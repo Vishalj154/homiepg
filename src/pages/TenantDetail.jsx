@@ -42,6 +42,13 @@ export default function TenantDetail() {
       .order('created_at', { ascending: false })
     setDocuments(docs || [])
 
+    const { data: pays } = await supabase
+      .from('rent_payments')
+      .select('*')
+      .eq('tenant_id', id)
+      .order('month', { ascending: false })
+    setPayments(pays || [])
+
     setLoading(false)
   }
 
@@ -103,6 +110,60 @@ export default function TenantDetail() {
     if (!confirm('Delete this document?')) return
     await supabase.storage.from('tenant-documents').remove([filePath])
     await supabase.from('tenant_documents').delete().eq('id', docId)
+    fetchAll()
+  }
+
+  async function handleAddPayment(e) {
+    e.preventDefault()
+    setPayUploading(true)
+    const { data: { user } } = await supabase.auth.getUser()
+
+    let receiptUrl = null
+    if (receiptFile) {
+      const filePath = `${user.id}/${id}/${Date.now()}-${receiptFile.name}`
+      const { error: uploadError } = await supabase.storage
+        .from('rent-receipts')
+        .upload(filePath, receiptFile)
+      if (uploadError) {
+        alert(uploadError.message)
+        setPayUploading(false)
+        return
+      }
+      receiptUrl = filePath
+    }
+
+    const { error } = await supabase.from('rent_payments').insert({
+      tenant_id: id,
+      month: payForm.month,
+      amount: parseFloat(payForm.amount),
+      payment_date: payForm.payment_date,
+      payment_method: payForm.payment_method,
+      receipt_url: receiptUrl,
+      status: 'paid'
+    })
+
+    if (!error) {
+      setPayForm({ month: '', amount: tenant?.monthly_rent || '', payment_date: '', payment_method: 'cash' })
+      setReceiptFile(null)
+      fetchAll()
+    } else {
+      alert(error.message)
+    }
+    setPayUploading(false)
+  }
+
+  async function viewReceipt(filePath) {
+    const { data, error } = await supabase.storage
+      .from('rent-receipts')
+      .createSignedUrl(filePath, 60)
+    if (error) return alert(error.message)
+    window.open(data.signedUrl, '_blank')
+  }
+
+  async function deletePayment(paymentId, receiptUrl) {
+    if (!confirm('Delete this payment record?')) return
+    if (receiptUrl) await supabase.storage.from('rent-receipts').remove([receiptUrl])
+    await supabase.from('rent_payments').delete().eq('id', paymentId)
     fetchAll()
   }
 
@@ -213,6 +274,94 @@ export default function TenantDetail() {
                         onClick={() => deleteDocument(doc.id, doc.file_url)}
                         className="text-xs text-red-500 font-medium"
                       >
+                        Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Rent Payments */}
+          <div className="bg-white rounded-xl shadow-sm p-5 mt-6">
+            <h2 className="font-semibold text-gray-800 mb-3">Rent Payments</h2>
+
+            <form onSubmit={handleAddPayment} className="space-y-3 mb-5">
+              <div className="grid grid-cols-2 gap-3">
+                <input
+                  placeholder="Month (e.g. July 2026)"
+                  value={payForm.month}
+                  onChange={e => setPayForm({ ...payForm, month: e.target.value })}
+                  required
+                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                />
+                <input
+                  type="number"
+                  placeholder="Amount"
+                  value={payForm.amount}
+                  onChange={e => setPayForm({ ...payForm, amount: e.target.value })}
+                  required
+                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-3">
+                <input
+                  type="date"
+                  value={payForm.payment_date}
+                  onChange={e => setPayForm({ ...payForm, payment_date: e.target.value })}
+                  required
+                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                />
+                <select
+                  value={payForm.payment_method}
+                  onChange={e => setPayForm({ ...payForm, payment_method: e.target.value })}
+                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                >
+                  <option value="cash">Cash</option>
+                  <option value="upi">UPI</option>
+                  <option value="bank_transfer">Bank Transfer</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs text-gray-500 block mb-1">Receipt Photo (optional)</label>
+                <input
+                  type="file"
+                  accept="image/*,.pdf"
+                  onChange={e => setReceiptFile(e.target.files[0])}
+                  className="w-full text-sm"
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={payUploading}
+                className="bg-homie-green text-white px-4 py-2 rounded-lg text-sm font-medium disabled:opacity-50"
+              >
+                {payUploading ? 'Saving...' : 'Mark as Paid'}
+              </button>
+            </form>
+
+            {payments.length === 0 ? (
+              <p className="text-sm text-gray-400">No payments recorded yet.</p>
+            ) : (
+              <div className="space-y-2">
+                {payments.map(p => (
+                  <div key={p.id} className="flex items-center justify-between border border-gray-100 rounded-lg px-4 py-3">
+                    <div>
+                      <p className="text-sm font-medium text-gray-700">{p.month}</p>
+                      <p className="text-xs text-gray-500">₹{p.amount} — {p.payment_method} — {p.payment_date}</p>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <span className="text-xs px-2 py-1 rounded bg-green-100 text-green-600">
+                        {p.status}
+                      </span>
+                      {p.receipt_url && (
+                        <button onClick={() => viewReceipt(p.receipt_url)} className="text-xs text-homie-blue font-medium">
+                          Receipt
+                        </button>
+                      )}
+                      <button onClick={() => deletePayment(p.id, p.receipt_url)} className="text-xs text-red-500 font-medium">
                         Delete
                       </button>
                     </div>
