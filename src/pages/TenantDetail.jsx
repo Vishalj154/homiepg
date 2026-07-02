@@ -17,6 +17,11 @@ export default function TenantDetail() {
   const [docNumber, setDocNumber] = useState('')
   const [file, setFile] = useState(null)
 
+  const [payments, setPayments] = useState([])
+  const [payUploading, setPayUploading] = useState(false)
+  const [payForm, setPayForm] = useState({ month: '', amount: tenant?.monthly_rent || '', payment_date: '', payment_method: 'cash' })
+  const [receiptFile, setReceiptFile] = useState(null)
+
   useEffect(() => {
     fetchAll()
   }, [id])
@@ -188,9 +193,8 @@ export default function TenantDetail() {
                       <p className="text-xs text-gray-500">{doc.document_number || 'No number provided'}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className={`text-xs px-2 py-1 rounded ${
-                        doc.verified ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-500'
-                      }`}>
+                      <span className={`text-xs px-2 py-1 rounded ${doc.verified ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-500'
+                        }`}>
                         {doc.verified ? 'Verified' : 'Pending'}
                       </span>
                       <button

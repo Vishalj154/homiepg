@@ -6,6 +6,7 @@ import BuildingDetail from './pages/BuildingDetail'
 import Buildings from './pages/Buildings'
 import Tenants from './pages/Tenants'
 import TenantDetail from './pages/TenantDetail'
+import Expenses from './pages/Expenses'
 
 
 function ProtectedRoute({ children }) {
@@ -43,6 +44,8 @@ function AppRoutes() {
       <Route path="/tenants/:id" element={
         <ProtectedRoute><TenantDetail /></ProtectedRoute>
       } />
+
+      <Route path="/expenses" element={<ProtectedRoute><Expenses /></ProtectedRoute>} />
     </Routes>
   )
 }
