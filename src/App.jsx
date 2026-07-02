@@ -4,6 +4,9 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import BuildingDetail from './pages/BuildingDetail'
 import Buildings from './pages/Buildings'
+import Tenants from './pages/Tenants'
+import TenantDetail from './pages/TenantDetail'
+
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -32,6 +35,13 @@ function AppRoutes() {
         <ProtectedRoute>
           <BuildingDetail />
         </ProtectedRoute>
+      } />
+
+      <Route path="/tenants" element={
+        <ProtectedRoute><Tenants /></ProtectedRoute>
+      } />
+      <Route path="/tenants/:id" element={
+        <ProtectedRoute><TenantDetail /></ProtectedRoute>
       } />
     </Routes>
   )

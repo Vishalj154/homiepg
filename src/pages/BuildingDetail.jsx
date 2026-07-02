@@ -140,6 +140,3 @@ export default function BuildingDetail() {
     </div>
   )
 }
-
-
-

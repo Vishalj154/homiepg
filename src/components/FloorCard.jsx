@@ -1,45 +1,41 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { supabase } from '../lib/supabase'
+import BedModal from './BedModal'
 
 export default function FloorCard({ floor, buildingId, onUpdate }) {
   const [showRoomForm, setShowRoomForm] = useState(false)
   const [roomNumber, setRoomNumber] = useState('')
   const [capacity, setCapacity] = useState(2)
   const [rent, setRent] = useState('')
+  const [selectedBed, setSelectedBed] = useState(null)
 
   async function handleAddRoom(e) {
     e.preventDefault()
-    try {
-      const { data: room, error: roomError } = await supabase.from('rooms').insert({
-        floor_id: floor.id,
-        building_id: buildingId,
-        room_number: roomNumber,
-        capacity: parseInt(capacity),
-        rent: parseFloat(rent) || 0,
-      }).select().single()
+    const { data: room, error } = await supabase.from('rooms').insert({
+      floor_id: floor.id,
+      building_id: buildingId,
+      room_number: roomNumber,
+      capacity: parseInt(capacity),
+      rent: parseFloat(rent) || 0
+    }).select().single()
 
-      if (roomError) throw roomError
-
-      // auto-create beds based on capacity
+    if (!error && room) {
       const bedsToInsert = Array.from({ length: capacity }, (_, i) => ({
         room_id: room.id,
         building_id: buildingId,
         bed_number: `${roomNumber}-${i + 1}`,
         status: 'vacant',
-        rent: parseFloat(rent) || 0,
+        rent: parseFloat(rent) || 0
       }))
-      const { error: bedsError } = await supabase.from('beds').insert(bedsToInsert)
-
-      if (bedsError) throw bedsError
+      await supabase.from('beds').insert(bedsToInsert)
 
       setRoomNumber('')
       setCapacity(2)
       setRent('')
       setShowRoomForm(false)
       onUpdate()
-    } catch (error) {
-      console.error('Error adding room:', error.message)
-      alert('Error adding room: ' + error.message)
+    } else {
+      alert(error?.message)
     }
   }
 
@@ -60,9 +56,8 @@ export default function FloorCard({ floor, buildingId, onUpdate }) {
       {showRoomForm && (
         <form onSubmit={handleAddRoom} className="flex gap-3 items-end mb-4 flex-wrap">
           <div>
-            <label htmlFor="room-number" className="text-xs text-gray-500 block mb-1">Room No.</label>
+            <label className="text-xs text-gray-500 block mb-1">Room No.</label>
             <input
-              id="room-number"
               value={roomNumber}
               onChange={e => setRoomNumber(e.target.value)}
               required
@@ -70,9 +65,8 @@ export default function FloorCard({ floor, buildingId, onUpdate }) {
             />
           </div>
           <div>
-            <label htmlFor="room-capacity" className="text-xs text-gray-500 block mb-1">Beds</label>
+            <label className="text-xs text-gray-500 block mb-1">Beds</label>
             <input
-              id="room-capacity"
               type="number"
               min="1"
               value={capacity}
@@ -81,9 +75,8 @@ export default function FloorCard({ floor, buildingId, onUpdate }) {
             />
           </div>
           <div>
-            <label htmlFor="room-rent" className="text-xs text-gray-500 block mb-1">Rent/bed</label>
+            <label className="text-xs text-gray-500 block mb-1">Rent/bed</label>
             <input
-              id="room-rent"
               type="number"
               value={rent}
               onChange={e => setRent(e.target.value)}
@@ -105,21 +98,32 @@ export default function FloorCard({ floor, buildingId, onUpdate }) {
               <p className="text-sm font-medium text-gray-700 mb-2">Room {room.room_number}</p>
               <div className="flex flex-wrap gap-1.5">
                 {room.beds?.map(bed => (
-                  <span
+                  <button
                     key={bed.id}
-                    className={`text-xs px-2 py-1 rounded ${
+                    onClick={() => setSelectedBed({ ...bed, roomId: room.id })}
+                    className={`text-xs px-2 py-1 rounded cursor-pointer hover:opacity-80 transition-all ${
                       bed.status === 'occupied'
                         ? 'bg-red-100 text-red-600'
                         : 'bg-green-100 text-green-600'
                     }`}
                   >
                     🛏️ {bed.bed_number}
-                  </span>
+                  </button>
                 ))}
               </div>
             </div>
           ))}
         </div>
+      )}
+
+      {selectedBed && (
+        <BedModal
+          bed={selectedBed}
+          buildingId={buildingId}
+          roomId={selectedBed.roomId}
+          onClose={() => setSelectedBed(null)}
+          onUpdate={onUpdate}
+        />
       )}
     </div>
   )
