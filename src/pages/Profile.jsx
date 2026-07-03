@@ -113,134 +113,123 @@ export default function Profile() {
               </div>
 
               <div>
-                <p className="text-xl font-bold text-gray-800">{form.full_name || '—'}</p>
+                <p className="text-xl font-bold text-gray-800 dark:text-gray-100">{form.full_name || '—'}</p>
                 {form.business_name && (
-                  <p className="text-sm text-gray-500 mt-0.5">{form.business_name}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-0.5">{form.business_name}</p>
                 )}
               </div>
 
               {/* Badge */}
-              <span className="text-xs px-3 py-1 bg-gray-100 text-gray-500 rounded-full font-medium">
+              <span className="text-xs px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-500 dark:text-gray-300 rounded-full font-medium">
                 Owner Account
               </span>
 
               <div className="w-full border-t border-gray-100 dark:border-gray-700 pt-4 space-y-2 text-left">
                 <div className="flex gap-2 text-sm">
-                  <span className="text-gray-400 w-14 shrink-0">Email</span>
-                  <span className="text-gray-700 text-xs truncate">{user?.email}</span>
+                  <span className="text-gray-400 dark:text-gray-400 w-14 shrink-0">Email</span>
+                  <span className="text-gray-700 dark:text-gray-200 text-xs truncate">{user?.email}</span>
                 </div>
                 <div className="flex gap-2 text-sm">
-                  <span className="text-gray-400 w-14 shrink-0">Joined</span>
-                  <span className="text-gray-700 text-xs">{joinedDate}</span>
+                  <span className="text-gray-400 dark:text-gray-400 w-14 shrink-0">Joined</span>
+                  <span className="text-gray-700 dark:text-gray-200 text-xs">{joinedDate}</span>
                 </div>
                 {(form.city || form.state) && (
                   <div className="flex gap-2 text-sm">
-                    <span className="text-gray-400 w-14 shrink-0">Location</span>
-                    <span className="text-gray-700 text-xs">{[form.city, form.state].filter(Boolean).join(', ')}</span>
+                    <span className="text-gray-400 dark:text-gray-400 w-14 shrink-0">Location</span>
+                    <span className="text-gray-700 dark:text-gray-200 text-xs">{[form.city, form.state].filter(Boolean).join(', ')}</span>
                   </div>
                 )}
                 <div className="flex gap-2 text-sm">
-                  <span className="text-gray-400 w-14 shrink-0">ID</span>
-                  <span className="text-gray-400 text-xs truncate font-mono">{user?.id?.slice(0, 12)}…</span>
+                  <span className="text-gray-400 dark:text-gray-400 w-14 shrink-0">ID</span>
+                  <span className="text-gray-400 dark:text-gray-300 text-xs truncate font-mono">{user?.id?.slice(0, 12)}…</span>
                 </div>
               </div>
+              <form onSubmit={handleSave} className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs text-gray-500 block mb-1">Full Name</label>
+                    <input
+                      value={form.full_name}
+                      onChange={e => setForm({ ...form, full_name: e.target.value })}
+                      placeholder="Your full name"
+                      className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-homie-blue/30"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Phone</label>
+                    <input
+                      value={form.phone}
+                      onChange={e => setForm({ ...form, phone: e.target.value })}
+                      placeholder="10-digit mobile"
+                      className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-homie-blue/30"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">PG Business Name</label>
+                  <input
+                    value={form.business_name}
+                    onChange={e => setForm({ ...form, business_name: e.target.value })}
+                    placeholder="e.g. Sharma PG Group"
+                    className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-homie-blue/30"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">City</label>
+                    <input
+                      value={form.city}
+                      onChange={e => setForm({ ...form, city: e.target.value })}
+                      placeholder="City"
+                      className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-homie-blue/30"
+                    />
+                  </div>
+                  <div>
+                    <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">State</label>
+                    <input
+                      value={form.state}
+                      onChange={e => setForm({ ...form, state: e.target.value })}
+                      placeholder="State"
+                      className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-homie-blue/30"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3 pt-1">
+                  <button
+                    type="submit"
+                    disabled={saving}
+                    className="bg-homie-blue text-white px-6 py-2.5 rounded-xl text-sm font-medium disabled:opacity-50 hover:bg-blue-700 transition-all"
+                  >
+                    {saving ? 'Saving...' : 'Save Changes'}
+                  </button>
+                  {saved && (
+                    <span className="text-homie-green text-sm font-medium">✅ Saved!</span>
+                  )}
+                </div>
+              </form>
             </div>
 
-            {/* ── Right: Edit form ── */}
-            <div className="lg:col-span-2 flex flex-col gap-5">
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6">
-                <h2 className="font-semibold text-gray-700 dark:text-gray-100 mb-5">Profile Details</h2>
-
-                {loading ? (
-                  <p className="text-gray-400 text-sm">Loading...</p>
-                ) : (
-                  <form onSubmit={handleSave} className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-xs text-gray-500 block mb-1">Full Name</label>
-                        <input
-                          value={form.full_name}
-                          onChange={e => setForm({ ...form, full_name: e.target.value })}
-                          placeholder="Your full name"
-                          className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-homie-blue/30"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs text-gray-500 block mb-1">Phone</label>
-                        <input
-                          value={form.phone}
-                          onChange={e => setForm({ ...form, phone: e.target.value })}
-                          placeholder="10-digit mobile"
-                          className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-homie-blue/30"
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="text-xs text-gray-500 block mb-1">PG Business Name</label>
-                      <input
-                        value={form.business_name}
-                        onChange={e => setForm({ ...form, business_name: e.target.value })}
-                        placeholder="e.g. Sharma PG Group"
-                        className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-homie-blue/30"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <label className="text-xs text-gray-500 block mb-1">City</label>
-                        <input
-                          value={form.city}
-                          onChange={e => setForm({ ...form, city: e.target.value })}
-                          placeholder="City"
-                          className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-homie-blue/30"
-                        />
-                      </div>
-                      <div>
-                        <label className="text-xs text-gray-500 block mb-1">State</label>
-                        <input
-                          value={form.state}
-                          onChange={e => setForm({ ...form, state: e.target.value })}
-                          placeholder="State"
-                          className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-homie-blue/30"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-3 pt-1">
-                      <button
-                        type="submit"
-                        disabled={saving}
-                        className="bg-homie-blue text-white px-6 py-2.5 rounded-xl text-sm font-medium disabled:opacity-50 hover:bg-blue-700 transition-all"
-                      >
-                        {saving ? 'Saving...' : 'Save Changes'}
-                      </button>
-                      {saved && (
-                        <span className="text-homie-green text-sm font-medium">✅ Saved!</span>
-                      )}
-                    </div>
-                  </form>
-                )}
-              </div>
-
-              {/* Sign Out — single canonical location */}
-              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-red-100 dark:border-red-700">
-                <h2 className="font-semibold text-gray-700 dark:text-gray-100 mb-1">Sign Out</h2>
-                <p className="text-sm text-gray-400 dark:text-gray-400 mb-4">
-                  You'll be returned to the HomiePG homepage.
-                </p>
-                <button
-                  onClick={handleSignOut}
-                  className="border border-red-300 text-red-500 px-5 py-2 rounded-xl text-sm font-medium hover:bg-red-50 transition-all"
-                >
-                  Sign Out
-                </button>
-              </div>
+            {/* Sign Out — single canonical location */}
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-red-100 dark:border-red-700">
+              <h2 className="font-semibold text-gray-700 dark:text-gray-100 mb-1">Sign Out</h2>
+              <p className="text-sm text-gray-400 dark:text-gray-400 mb-4">
+                You'll be returned to the HomiePG homepage.
+              </p>
+              <button
+                onClick={handleSignOut}
+                className="border border-red-300 text-red-500 px-5 py-2 rounded-xl text-sm font-medium hover:bg-red-50 transition-all"
+              >
+                Sign Out
+              </button>
             </div>
-
           </div>
+
         </div>
       </div>
     </div>
+
   )
 }

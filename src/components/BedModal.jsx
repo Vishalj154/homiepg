@@ -108,31 +108,31 @@ export default function BedModal({ bed, buildingId, roomId, onClose, onUpdate })
               className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
             />
             <div>
-              <label className="text-xs text-gray-500 block mb-1">Joining Date</label>
+              <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Joining Date</label>
               <input
                 type="date"
                 value={form.joining_date}
                 onChange={e => setForm({ ...form, joining_date: e.target.value })}
-                className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-gray-500 block mb-1">Monthly Rent</label>
+                <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Monthly Rent</label>
                 <input
                   type="number"
                   value={form.monthly_rent}
                   onChange={e => setForm({ ...form, monthly_rent: e.target.value })}
-                  className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                  className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
                 />
               </div>
               <div>
-                <label className="text-xs text-gray-500 block mb-1">Deposit</label>
+                <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Deposit</label>
                 <input
                   type="number"
                   value={form.deposit}
                   onChange={e => setForm({ ...form, deposit: e.target.value })}
-                  className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                  className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
                 />
               </div>
             </div>

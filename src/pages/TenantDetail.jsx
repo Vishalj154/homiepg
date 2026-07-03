@@ -183,13 +183,13 @@ export default function TenantDetail() {
                   <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{tenant?.full_name}</h2>
                   <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
                     tenant?.status === 'active'
-                      ? 'bg-green-100 text-green-600'
-                      : 'bg-gray-100 text-gray-500'
-                  }`}>
-                    {tenant?.status === 'active' ? 'Active' : 'Moved Out'}
-                  </span>
-                  {isKycVerified && (
-                    <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 font-medium">
+                        ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-300'
+                        : 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-300'
+                    }`}>
+                      {tenant?.status === 'active' ? 'Active' : 'Moved Out'}
+                    </span>
+                    {isKycVerified && (
+                      <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-50 dark:bg-emerald-900/30 text-emerald-600 dark:text-emerald-200 font-medium">
                       ✅ KYC Verified
                     </span>
                   )}
@@ -228,7 +228,7 @@ export default function TenantDetail() {
                 <select
                   value={docType}
                   onChange={e => setDocType(e.target.value)}
-                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
                 >
                   <option value="aadhaar">Aadhaar</option>
                   <option value="pan">PAN</option>
@@ -376,7 +376,7 @@ export default function TenantDetail() {
                       <p className="text-xs text-gray-500 dark:text-gray-400">₹{p.amount} — {p.payment_method} — {p.payment_date}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs px-2 py-1 rounded bg-green-100 text-green-600">{p.status}</span>
+                      <span className="text-xs px-2 py-1 rounded bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-300">{p.status}</span>
                       {p.receipt_url && (
                         <button onClick={() => viewReceipt(p.receipt_url)} className="text-xs text-homie-blue font-medium">Receipt</button>
                       )}

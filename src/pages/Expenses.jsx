@@ -110,11 +110,11 @@ export default function Expenses() {
 
           {/* Filters + Add */}
           <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-            <div className="flex gap-3">
+            <div className="flex gap-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3">
               <select
                 value={filterBuilding}
                 onChange={e => setFilterBuilding(e.target.value)}
-                className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                className="border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               >
                 <option value="all">All Buildings</option>
                 {buildings.map(b => (
@@ -124,7 +124,7 @@ export default function Expenses() {
               <select
                 value={filterCategory}
                 onChange={e => setFilterCategory(e.target.value)}
-                className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                className="border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               >
                 <option value="all">All Categories</option>
                 <option value="electricity">Electricity</option>
@@ -146,19 +146,19 @@ export default function Expenses() {
           </div>
 
           {/* Total */}
-          <div className="bg-white rounded-xl shadow-sm p-5 mb-6 max-w-xs">
-            <p className="text-sm text-gray-500">Total ({filtered.length} entries)</p>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 mb-6 max-w-xs">
+            <p className="text-sm text-gray-500 dark:text-gray-400">Total ({filtered.length} entries)</p>
             <p className="text-2xl font-bold text-red-500">₹{totalAmount.toLocaleString()}</p>
           </div>
 
           {/* Add Form */}
           {showForm && (
-            <form onSubmit={handleAdd} className="bg-white rounded-xl shadow-sm p-6 mb-6 space-y-3 max-w-lg">
+            <form onSubmit={handleAdd} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6 space-y-3 max-w-lg">
               <select
                 value={form.building_id}
                 onChange={e => setForm({ ...form, building_id: e.target.value })}
                 required
-                className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               >
                 <option value="">Select Building</option>
                 {buildings.map(b => (
@@ -169,7 +169,7 @@ export default function Expenses() {
               <select
                 value={form.category}
                 onChange={e => setForm({ ...form, category: e.target.value })}
-                className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               >
                 <option value="electricity">Electricity</option>
                 <option value="water">Water</option>
@@ -188,14 +188,14 @@ export default function Expenses() {
                   value={form.amount}
                   onChange={e => setForm({ ...form, amount: e.target.value })}
                   required
-                  className="border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
                 />
                 <input
                   type="date"
                   value={form.expense_date}
                   onChange={e => setForm({ ...form, expense_date: e.target.value })}
                   required
-                  className="border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
                 />
               </div>
 
@@ -203,16 +203,16 @@ export default function Expenses() {
                 placeholder="Remarks (optional)"
                 value={form.remarks}
                 onChange={e => setForm({ ...form, remarks: e.target.value })}
-                className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               />
 
               <div>
-                <label className="text-xs text-gray-500 block mb-1">Bill Photo (optional)</label>
+                <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Bill Photo (optional)</label>
                 <input
                   type="file"
                   accept="image/*,.pdf"
                   onChange={e => setFile(e.target.files[0])}
-                  className="w-full text-sm"
+                  className="w-full text-sm text-gray-800 dark:text-gray-100"
                 />
               </div>
 
@@ -232,9 +232,9 @@ export default function Expenses() {
           ) : filtered.length === 0 ? (
             <p className="text-gray-400 text-center py-12">No expenses recorded yet.</p>
           ) : (
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden">
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden">
               <table className="w-full text-sm">
-                <thead className="bg-gray-50 text-gray-500 text-left">
+                <thead className="bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 text-left">
                   <tr>
                     <th className="px-5 py-3">Date</th>
                     <th className="px-5 py-3">Building</th>
@@ -246,12 +246,12 @@ export default function Expenses() {
                 </thead>
                 <tbody>
                   {filtered.map(e => (
-                    <tr key={e.id} className="border-t border-gray-100">
-                      <td className="px-5 py-3 text-gray-600">{e.expense_date}</td>
-                      <td className="px-5 py-3 text-gray-600">{e.buildings?.name}</td>
-                      <td className="px-5 py-3 capitalize text-gray-600">{e.category}</td>
-                      <td className="px-5 py-3 font-medium text-gray-800">₹{e.amount}</td>
-                      <td className="px-5 py-3 text-gray-500">{e.remarks || '-'}</td>
+                    <tr key={e.id} className="border-t border-gray-100 dark:border-gray-700">
+                      <td className="px-5 py-3 text-gray-600 dark:text-gray-300">{e.expense_date}</td>
+                      <td className="px-5 py-3 text-gray-600 dark:text-gray-300">{e.buildings?.name}</td>
+                      <td className="px-5 py-3 capitalize text-gray-600 dark:text-gray-300">{e.category}</td>
+                      <td className="px-5 py-3 font-medium text-gray-800 dark:text-gray-100">₹{e.amount}</td>
+                      <td className="px-5 py-3 text-gray-500 dark:text-gray-400">{e.remarks || '-'}</td>
                       <td className="px-5 py-3 flex gap-3">
                         {e.bill_url && (
                           <button onClick={() => viewBill(e.bill_url)} className="text-homie-blue font-medium">

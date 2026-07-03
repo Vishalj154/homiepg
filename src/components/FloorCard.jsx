@@ -42,7 +42,7 @@ export default function FloorCard({ floor, buildingId, onUpdate }) {
   return (
     <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
       <div className="flex items-center justify-between mb-3">
-        <h3 className="font-semibold text-gray-700">
+        <h3 className="font-semibold text-gray-700 dark:text-gray-100">
           {floor.floor_name || `Floor ${floor.floor_number}`}
         </h3>
         <button
@@ -90,12 +90,12 @@ export default function FloorCard({ floor, buildingId, onUpdate }) {
       )}
 
       {floor.rooms?.length === 0 ? (
-        <p className="text-sm text-gray-400">No rooms yet.</p>
+        <p className="text-sm text-gray-400 dark:text-gray-400">No rooms yet.</p>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {floor.rooms?.map(room => (
-            <div key={room.id} className="border border-gray-100 rounded-lg p-3">
-              <p className="text-sm font-medium text-gray-700 mb-2">Room {room.room_number}</p>
+            <div key={room.id} className="border border-gray-100 dark:border-gray-700 rounded-lg p-3">
+              <p className="text-sm font-medium text-gray-700 dark:text-gray-100 mb-2">Room {room.room_number}</p>
               <div className="flex flex-wrap gap-1.5">
                 {room.beds?.map(bed => (
                   <button
@@ -103,8 +103,8 @@ export default function FloorCard({ floor, buildingId, onUpdate }) {
                     onClick={() => setSelectedBed({ ...bed, roomId: room.id })}
                     className={`text-xs px-2 py-1 rounded cursor-pointer hover:opacity-80 transition-all ${
                       bed.status === 'occupied'
-                        ? 'bg-red-100 text-red-600'
-                        : 'bg-green-100 text-green-600'
+                        ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-300'
+                        : 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-300'
                     }`}
                   >
                     🛏️ {bed.bed_number}

@@ -165,19 +165,19 @@ export default function Buildings() {
                   placeholder="City"
                   value={form.city}
                   onChange={e => setForm({ ...form, city: e.target.value })}
-                  className="border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
                 />
                 <input
                   placeholder="State"
                   value={form.state}
                   onChange={e => setForm({ ...form, state: e.target.value })}
-                  className="border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
                 />
                 <input
                   placeholder="Pincode"
                   value={form.pincode}
                   onChange={e => setForm({ ...form, pincode: e.target.value })}
-                  className="border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
                 />
               </div>
 
@@ -260,7 +260,7 @@ export default function Buildings() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               {filteredBuildings.map(b => (
-                <div key={b.id} className="bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all">
+                <div key={b.id} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-all">
                   <img
                     src={b.image_url || 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?w=400'}
                     alt={b.name}
@@ -275,25 +275,25 @@ export default function Buildings() {
                     {/* Amenity badges */}
                     <div className="flex flex-wrap gap-1.5 mb-3">
                       {b.food_type && foodLabel[b.food_type] && (
-                        <span className="text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full">{foodLabel[b.food_type]}</span>
+                        <span className="text-xs bg-orange-50 dark:bg-orange-900/30 text-orange-600 dark:text-orange-200 px-2 py-0.5 rounded-full">{foodLabel[b.food_type]}</span>
                       )}
                       {b.water_supply_timing && (
-                        <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">💧 {b.water_supply_timing}</span>
+                        <span className="text-xs bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-200 px-2 py-0.5 rounded-full">💧 {b.water_supply_timing}</span>
                       )}
                       {b.wifi_available && (
-                        <span className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">📶 WiFi</span>
+                        <span className="text-xs bg-indigo-50 dark:bg-indigo-900/30 text-indigo-600 dark:text-indigo-200 px-2 py-0.5 rounded-full">📶 WiFi</span>
                       )}
                       {b.power_backup && (
-                        <span className="text-xs bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-full">🔌 Power Backup</span>
+                        <span className="text-xs bg-yellow-50 dark:bg-yellow-900/30 text-yellow-700 dark:text-yellow-200 px-2 py-0.5 rounded-full">🔌 Power Backup</span>
                       )}
                       {b.parking_available && (
-                        <span className="text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded-full">🚗 Parking</span>
+                        <span className="text-xs bg-green-50 dark:bg-green-900/30 text-green-600 dark:text-green-200 px-2 py-0.5 rounded-full">🚗 Parking</span>
                       )}
                       {b.laundry_available && (
-                        <span className="text-xs bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full">🧺 Laundry</span>
+                        <span className="text-xs bg-purple-50 dark:bg-purple-900/30 text-purple-600 dark:text-purple-200 px-2 py-0.5 rounded-full">🧺 Laundry</span>
                       )}
                       {b.cleaning_staff && (
-                        <span className="text-xs bg-slate-50 text-slate-600 px-2 py-0.5 rounded-full">🧹 Cleaning Staff</span>
+                        <span className="text-xs bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-200 px-2 py-0.5 rounded-full">🧹 Cleaning Staff</span>
                       )}
                     </div>
 
