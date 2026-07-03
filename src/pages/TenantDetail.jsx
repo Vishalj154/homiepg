@@ -4,7 +4,7 @@ import { supabase } from '../lib/supabase'
 import Sidebar from '../components/Sidebar'
 import TopBar from '../components/TopBar'
 
-const currentMonth = new Date().toISOString().slice(0, 7) // YYYY-MM e.g. "2026-07"
+const currentMonth = new Date().toISOString().slice(0, 7) // YYYY-MM
 
 export default function TenantDetail() {
   const { id } = useParams()
@@ -64,43 +64,22 @@ export default function TenantDetail() {
   async function handleUpload(e) {
     e.preventDefault()
     if (!file) return alert('Please select a file')
-
     setUploading(true)
     const { data: { user } } = await supabase.auth.getUser()
     const filePath = `${user.id}/${id}/${docType}-${Date.now()}-${file.name}`
 
-    const { error: uploadError } = await supabase.storage
-      .from('tenant-documents')
-      .upload(filePath, file)
-
-    if (uploadError) {
-      alert(uploadError.message)
-      setUploading(false)
-      return
-    }
+    const { error: uploadError } = await supabase.storage.from('tenant-documents').upload(filePath, file)
+    if (uploadError) { alert(uploadError.message); setUploading(false); return }
 
     const { error: insertError } = await supabase.from('tenant_documents').insert({
-      tenant_id: id,
-      document_type: docType,
-      document_number: docNumber,
-      file_url: filePath,
-      verified: false,
+      tenant_id: id, document_type: docType, document_number: docNumber, file_url: filePath, verified: false,
     })
-
-    if (insertError) {
-      alert(insertError.message)
-    } else {
-      setDocNumber('')
-      setFile(null)
-      fetchAll()
-    }
+    if (insertError) { alert(insertError.message) } else { setDocNumber(''); setFile(null); fetchAll() }
     setUploading(false)
   }
 
   async function viewDocument(filePath) {
-    const { data, error } = await supabase.storage
-      .from('tenant-documents')
-      .createSignedUrl(filePath, 60)
+    const { data, error } = await supabase.storage.from('tenant-documents').createSignedUrl(filePath, 60)
     if (error) return alert('Could not open file: ' + error.message)
     window.open(data.signedUrl, '_blank')
   }
@@ -125,9 +104,7 @@ export default function TenantDetail() {
       payment_date: new Date().toISOString().slice(0, 10),
       payment_method: 'cash',
     })
-    setTimeout(() => {
-      payFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-    }, 50)
+    setTimeout(() => payFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50)
   }
 
   async function handleAddPayment(e) {
@@ -138,25 +115,15 @@ export default function TenantDetail() {
     let receiptUrl = null
     if (receiptFile) {
       const filePath = `${user.id}/${id}/${Date.now()}-${receiptFile.name}`
-      const { error: uploadError } = await supabase.storage
-        .from('rent-receipts')
-        .upload(filePath, receiptFile)
-      if (uploadError) {
-        alert(uploadError.message)
-        setPayUploading(false)
-        return
-      }
+      const { error: uploadError } = await supabase.storage.from('rent-receipts').upload(filePath, receiptFile)
+      if (uploadError) { alert(uploadError.message); setPayUploading(false); return }
       receiptUrl = filePath
     }
 
     const { error } = await supabase.from('rent_payments').insert({
-      tenant_id: id,
-      month: payForm.month,
-      amount: parseFloat(payForm.amount),
-      payment_date: payForm.payment_date,
-      payment_method: payForm.payment_method,
-      receipt_url: receiptUrl,
-      status: 'paid',
+      tenant_id: id, month: payForm.month, amount: parseFloat(payForm.amount),
+      payment_date: payForm.payment_date, payment_method: payForm.payment_method,
+      receipt_url: receiptUrl, status: 'paid',
     })
 
     if (!error) {
@@ -170,9 +137,7 @@ export default function TenantDetail() {
   }
 
   async function viewReceipt(filePath) {
-    const { data, error } = await supabase.storage
-      .from('rent-receipts')
-      .createSignedUrl(filePath, 60)
+    const { data, error } = await supabase.storage.from('rent-receipts').createSignedUrl(filePath, 60)
     if (error) return alert(error.message)
     window.open(data.signedUrl, '_blank')
   }
@@ -184,10 +149,12 @@ export default function TenantDetail() {
     fetchAll()
   }
 
-  // Payment status for this month
-  const isPaidThisMonth = payments.some(
-    p => p.month?.startsWith(currentMonth) && p.status === 'paid'
-  )
+  const isPaidThisMonth = payments.some(p => p.month?.startsWith(currentMonth) && p.status === 'paid')
+  const isKycVerified = documents.some(d => d.verified)
+
+  // Initials
+  const initials = (tenant?.full_name || '?')
+    .split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2)
 
   if (loading) return <p className="p-8 text-gray-400">Loading...</p>
 
@@ -198,34 +165,62 @@ export default function TenantDetail() {
         <TopBar title={tenant?.full_name || 'Tenant'} />
 
         <div className="px-8 py-6 max-w-3xl">
-          <button onClick={() => navigate('/tenants')} className="text-homie-blue text-sm mb-4">
+          <button onClick={() => navigate('/tenants')} className="text-homie-blue text-sm mb-4 hover:underline">
             ← Back to Tenants
           </button>
 
-          {/* Tenant Info */}
-          <div className="bg-white rounded-xl shadow-sm p-5 mb-6">
-            <h2 className="font-semibold text-gray-800 mb-3">Tenant Info</h2>
-            <div className="grid grid-cols-2 gap-y-2 text-sm">
-              <p className="text-gray-500">Name</p>
-              <p className="text-gray-800">{tenant?.full_name}</p>
-              <p className="text-gray-500">Phone</p>
-              <p className="text-gray-800">{tenant?.phone || '-'}</p>
-              <p className="text-gray-500">Email</p>
-              <p className="text-gray-800">{tenant?.email || '-'}</p>
-              <p className="text-gray-500">Building</p>
-              <p className="text-gray-800">{tenant?.buildings?.name}</p>
-              <p className="text-gray-500">Joining Date</p>
-              <p className="text-gray-800">{tenant?.joining_date || '-'}</p>
-              <p className="text-gray-500">Monthly Rent</p>
-              <p className="text-gray-800">₹{tenant?.monthly_rent}</p>
-              <p className="text-gray-500">Deposit</p>
-              <p className="text-gray-800">₹{tenant?.deposit}</p>
-              <p className="text-gray-500">Status</p>
-              <p className="text-gray-800 capitalize">{tenant?.status}</p>
+          {/* ── Profile header card ── */}
+          <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
+            <div className="flex items-start gap-5">
+              {/* Initials avatar */}
+              <div className="w-16 h-16 rounded-full bg-homie-blue flex items-center justify-center text-white text-xl font-bold shrink-0 shadow">
+                {initials}
+              </div>
+
+              <div className="flex-1 min-w-0">
+                {/* Name + badges row */}
+                <div className="flex flex-wrap items-center gap-2 mb-2">
+                  <h2 className="text-xl font-bold text-gray-900">{tenant?.full_name}</h2>
+                  <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
+                    tenant?.status === 'active'
+                      ? 'bg-green-100 text-green-600'
+                      : 'bg-gray-100 text-gray-500'
+                  }`}>
+                    {tenant?.status === 'active' ? 'Active' : 'Moved Out'}
+                  </span>
+                  {isKycVerified && (
+                    <span className="text-xs px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-600 font-medium">
+                      ✅ KYC Verified
+                    </span>
+                  )}
+                </div>
+
+                {/* Meta info */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-sm">
+                  {tenant?.buildings?.name && (
+                    <p className="text-gray-500">🏢 {tenant.buildings.name}</p>
+                  )}
+                  {tenant?.joining_date && (
+                    <p className="text-gray-500">📅 Joined {tenant.joining_date}</p>
+                  )}
+                  {tenant?.monthly_rent && (
+                    <p className="text-gray-500">💰 ₹{tenant.monthly_rent}/month</p>
+                  )}
+                  {tenant?.deposit && (
+                    <p className="text-gray-500">🔒 Deposit ₹{tenant.deposit}</p>
+                  )}
+                  {tenant?.phone && (
+                    <p className="text-gray-500">📞 {tenant.phone}</p>
+                  )}
+                  {tenant?.email && (
+                    <p className="text-gray-500">✉️ {tenant.email}</p>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Upload KYC */}
+          {/* ── Upload KYC ── */}
           <div className="bg-white rounded-xl shadow-sm p-5 mb-6">
             <h2 className="font-semibold text-gray-800 mb-3">Upload KYC Document</h2>
             <form onSubmit={handleUpload} className="space-y-3">
@@ -262,7 +257,7 @@ export default function TenantDetail() {
             </form>
           </div>
 
-          {/* Documents List */}
+          {/* ── Documents List ── */}
           <div className="bg-white rounded-xl shadow-sm p-5 mb-6">
             <h2 className="font-semibold text-gray-800 mb-3">Documents</h2>
             {documents.length === 0 ? (
@@ -291,16 +286,13 @@ export default function TenantDetail() {
             )}
           </div>
 
-          {/* Rent Payments */}
-          <div className="bg-white rounded-xl shadow-sm p-5 mt-6" ref={payFormRef}>
-            {/* Header with payment status badge */}
+          {/* ── Rent Payments ── */}
+          <div className="bg-white rounded-xl shadow-sm p-5" ref={payFormRef}>
             <div className="flex items-center justify-between mb-4">
               <h2 className="font-semibold text-gray-800">Rent Payments</h2>
               <div className="flex items-center gap-3">
                 <span className={`text-sm px-3 py-1 rounded-full font-medium ${
-                  isPaidThisMonth
-                    ? 'bg-green-100 text-green-600'
-                    : 'bg-red-100 text-red-500'
+                  isPaidThisMonth ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-500'
                 }`}>
                   {isPaidThisMonth ? '✅ Paid This Month' : '⚠️ Due This Month'}
                 </span>
