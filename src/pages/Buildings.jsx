@@ -5,6 +5,19 @@ import { useAuth } from '../contexts/AuthContext'
 import Sidebar from '../components/Sidebar'
 import TopBar from '../components/TopBar'
 
+const genderLabel = {
+  unisex: 'Co-living',
+  male: 'Male Only',
+  female: 'Female Only',
+}
+
+const foodLabel = {
+  veg: '🍽️ Veg',
+  non_veg: '🍖 Non-Veg',
+  both: '🍽️ Veg & Non-Veg',
+  not_included: null, // don't show badge if not included
+}
+
 export default function Buildings() {
   const { user } = useAuth()
   const navigate = useNavigate()
@@ -17,7 +30,20 @@ export default function Buildings() {
   const [filterGender, setFilterGender] = useState('all')
 
   const [form, setForm] = useState({
-    name: '', address: '', city: '', state: '', pincode: '', gender_type: 'unisex', image_url: ''
+    name: '',
+    address: '',
+    city: '',
+    state: '',
+    pincode: '',
+    gender_type: 'unisex',
+    image_url: '',
+    food_type: '',
+    water_supply_timing: '',
+    wifi_available: false,
+    power_backup: false,
+    parking_available: false,
+    laundry_available: false,
+    description: '',
   })
 
   useEffect(() => {
@@ -43,7 +69,14 @@ export default function Buildings() {
     })
 
     if (!error) {
-      setForm({ name: '', address: '', city: '', state: '', pincode: '', gender_type: 'unisex', image_url: '' })
+      setForm({
+        name: '', address: '', city: '', state: '', pincode: '',
+        gender_type: 'unisex', image_url: '',
+        food_type: '', water_supply_timing: '',
+        wifi_available: false, power_backup: false,
+        parking_available: false, laundry_available: false,
+        description: '',
+      })
       setShowForm(false)
       fetchBuildings()
     } else {
@@ -87,7 +120,7 @@ export default function Buildings() {
                 className="border border-gray-200 rounded-lg px-4 py-2 text-sm"
               >
                 <option value="all">All Types</option>
-                <option value="unisex">Unisex</option>
+                <option value="unisex">Co-living</option>
                 <option value="male">Male Only</option>
                 <option value="female">Female Only</option>
               </select>
@@ -145,15 +178,67 @@ export default function Buildings() {
                   className="border border-gray-200 rounded-lg px-4 py-2 text-sm"
                 />
               </div>
+
+              {/* Gender type */}
               <select
                 value={form.gender_type}
                 onChange={e => setForm({ ...form, gender_type: e.target.value })}
                 className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
               >
-                <option value="unisex">Unisex</option>
+                <option value="unisex">Co-living</option>
                 <option value="male">Male Only</option>
                 <option value="female">Female Only</option>
               </select>
+
+              {/* Food type */}
+              <select
+                value={form.food_type}
+                onChange={e => setForm({ ...form, food_type: e.target.value })}
+                className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+              >
+                <option value="">Food — Select type</option>
+                <option value="veg">🍽️ Veg Only</option>
+                <option value="non_veg">🍖 Non-Veg</option>
+                <option value="both">🍽️ Veg &amp; Non-Veg</option>
+                <option value="not_included">❌ Not Included</option>
+              </select>
+
+              {/* Water supply */}
+              <input
+                placeholder="Water Supply Timing (e.g. 24x7 or 6–9 AM &amp; 6–9 PM)"
+                value={form.water_supply_timing}
+                onChange={e => setForm({ ...form, water_supply_timing: e.target.value })}
+                className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+              />
+
+              {/* Amenity toggles */}
+              <div className="grid grid-cols-2 gap-3">
+                {[
+                  { key: 'wifi_available', label: '📶 WiFi Available' },
+                  { key: 'power_backup', label: '🔌 Power Backup' },
+                  { key: 'parking_available', label: '🚗 Parking Available' },
+                  { key: 'laundry_available', label: '🧺 Laundry Available' },
+                ].map(({ key, label }) => (
+                  <label key={key} className="flex items-center gap-3 border border-gray-200 rounded-lg px-4 py-2.5 cursor-pointer hover:bg-gray-50 transition-all">
+                    <input
+                      type="checkbox"
+                      checked={form[key]}
+                      onChange={e => setForm({ ...form, [key]: e.target.checked })}
+                      className="w-4 h-4 accent-homie-blue"
+                    />
+                    <span className="text-sm text-gray-700">{label}</span>
+                  </label>
+                ))}
+              </div>
+
+              {/* Description */}
+              <textarea
+                placeholder="Short description of the property (optional)"
+                value={form.description}
+                onChange={e => setForm({ ...form, description: e.target.value })}
+                rows={3}
+                className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm resize-none"
+              />
 
               <button
                 type="submit"
@@ -180,7 +265,36 @@ export default function Buildings() {
                   />
                   <div className="p-4">
                     <h3 className="font-semibold text-gray-800">{b.name}</h3>
-                    <p className="text-sm text-gray-500 mb-3">{b.city}, {b.state} — {b.gender_type}</p>
+                    <p className="text-sm text-gray-500 mb-2">
+                      {b.city}, {b.state} — {genderLabel[b.gender_type] || b.gender_type}
+                    </p>
+
+                    {/* Amenity badges */}
+                    <div className="flex flex-wrap gap-1.5 mb-3">
+                      {b.food_type && foodLabel[b.food_type] && (
+                        <span className="text-xs bg-orange-50 text-orange-600 px-2 py-0.5 rounded-full">{foodLabel[b.food_type]}</span>
+                      )}
+                      {b.water_supply_timing && (
+                        <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">💧 {b.water_supply_timing}</span>
+                      )}
+                      {b.wifi_available && (
+                        <span className="text-xs bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">📶 WiFi</span>
+                      )}
+                      {b.power_backup && (
+                        <span className="text-xs bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-full">🔌 Power Backup</span>
+                      )}
+                      {b.parking_available && (
+                        <span className="text-xs bg-green-50 text-green-600 px-2 py-0.5 rounded-full">🚗 Parking</span>
+                      )}
+                      {b.laundry_available && (
+                        <span className="text-xs bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full">🧺 Laundry</span>
+                      )}
+                    </div>
+
+                    {b.description && (
+                      <p className="text-xs text-gray-500 mb-3 line-clamp-2">{b.description}</p>
+                    )}
+
                     <div className="flex justify-between items-center">
                       <button
                         onClick={() => navigate(`/buildings/${b.id}`)}

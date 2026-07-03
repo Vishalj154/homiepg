@@ -1,12 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import Sidebar from '../components/Sidebar'
 import TopBar from '../components/TopBar'
 
+const currentMonth = new Date().toISOString().slice(0, 7) // YYYY-MM e.g. "2026-07"
+
 export default function TenantDetail() {
   const { id } = useParams()
   const navigate = useNavigate()
+  const payFormRef = useRef(null)
 
   const [tenant, setTenant] = useState(null)
   const [documents, setDocuments] = useState([])
@@ -19,7 +22,12 @@ export default function TenantDetail() {
 
   const [payments, setPayments] = useState([])
   const [payUploading, setPayUploading] = useState(false)
-  const [payForm, setPayForm] = useState({ month: '', amount: tenant?.monthly_rent || '', payment_date: '', payment_method: 'cash' })
+  const [payForm, setPayForm] = useState({
+    month: '',
+    amount: '',
+    payment_date: '',
+    payment_method: 'cash',
+  })
   const [receiptFile, setReceiptFile] = useState(null)
 
   useEffect(() => {
@@ -52,13 +60,13 @@ export default function TenantDetail() {
     setLoading(false)
   }
 
+  // --- Documents ---
   async function handleUpload(e) {
     e.preventDefault()
     if (!file) return alert('Please select a file')
 
     setUploading(true)
     const { data: { user } } = await supabase.auth.getUser()
-
     const filePath = `${user.id}/${id}/${docType}-${Date.now()}-${file.name}`
 
     const { error: uploadError } = await supabase.storage
@@ -76,7 +84,7 @@ export default function TenantDetail() {
       document_type: docType,
       document_number: docNumber,
       file_url: filePath,
-      verified: false
+      verified: false,
     })
 
     if (insertError) {
@@ -92,12 +100,8 @@ export default function TenantDetail() {
   async function viewDocument(filePath) {
     const { data, error } = await supabase.storage
       .from('tenant-documents')
-      .createSignedUrl(filePath, 60) // link valid for 60 seconds
-
-    if (error) {
-      alert('Could not open file: ' + error.message)
-      return
-    }
+      .createSignedUrl(filePath, 60)
+    if (error) return alert('Could not open file: ' + error.message)
     window.open(data.signedUrl, '_blank')
   }
 
@@ -111,6 +115,19 @@ export default function TenantDetail() {
     await supabase.storage.from('tenant-documents').remove([filePath])
     await supabase.from('tenant_documents').delete().eq('id', docId)
     fetchAll()
+  }
+
+  // --- Payments ---
+  function prefillCurrentMonth() {
+    setPayForm({
+      month: currentMonth,
+      amount: tenant?.monthly_rent?.toString() || '',
+      payment_date: new Date().toISOString().slice(0, 10),
+      payment_method: 'cash',
+    })
+    setTimeout(() => {
+      payFormRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 50)
   }
 
   async function handleAddPayment(e) {
@@ -139,7 +156,7 @@ export default function TenantDetail() {
       payment_date: payForm.payment_date,
       payment_method: payForm.payment_method,
       receipt_url: receiptUrl,
-      status: 'paid'
+      status: 'paid',
     })
 
     if (!error) {
@@ -166,6 +183,11 @@ export default function TenantDetail() {
     await supabase.from('rent_payments').delete().eq('id', paymentId)
     fetchAll()
   }
+
+  // Payment status for this month
+  const isPaidThisMonth = payments.some(
+    p => p.month?.startsWith(currentMonth) && p.status === 'paid'
+  )
 
   if (loading) return <p className="p-8 text-gray-400">Loading...</p>
 
@@ -241,7 +263,7 @@ export default function TenantDetail() {
           </div>
 
           {/* Documents List */}
-          <div className="bg-white rounded-xl shadow-sm p-5">
+          <div className="bg-white rounded-xl shadow-sm p-5 mb-6">
             <h2 className="font-semibold text-gray-800 mb-3">Documents</h2>
             {documents.length === 0 ? (
               <p className="text-sm text-gray-400">No documents uploaded yet.</p>
@@ -254,28 +276,14 @@ export default function TenantDetail() {
                       <p className="text-xs text-gray-500">{doc.document_number || 'No number provided'}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className={`text-xs px-2 py-1 rounded ${doc.verified ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-500'
-                        }`}>
+                      <span className={`text-xs px-2 py-1 rounded ${doc.verified ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-500'}`}>
                         {doc.verified ? 'Verified' : 'Pending'}
                       </span>
-                      <button
-                        onClick={() => viewDocument(doc.file_url)}
-                        className="text-xs text-homie-blue font-medium"
-                      >
-                        View
-                      </button>
-                      <button
-                        onClick={() => toggleVerified(doc.id, doc.verified)}
-                        className="text-xs text-gray-500 font-medium"
-                      >
+                      <button onClick={() => viewDocument(doc.file_url)} className="text-xs text-homie-blue font-medium">View</button>
+                      <button onClick={() => toggleVerified(doc.id, doc.verified)} className="text-xs text-gray-500 font-medium">
                         {doc.verified ? 'Unverify' : 'Verify'}
                       </button>
-                      <button
-                        onClick={() => deleteDocument(doc.id, doc.file_url)}
-                        className="text-xs text-red-500 font-medium"
-                      >
-                        Delete
-                      </button>
+                      <button onClick={() => deleteDocument(doc.id, doc.file_url)} className="text-xs text-red-500 font-medium">Delete</button>
                     </div>
                   </div>
                 ))}
@@ -284,18 +292,41 @@ export default function TenantDetail() {
           </div>
 
           {/* Rent Payments */}
-          <div className="bg-white rounded-xl shadow-sm p-5 mt-6">
-            <h2 className="font-semibold text-gray-800 mb-3">Rent Payments</h2>
+          <div className="bg-white rounded-xl shadow-sm p-5 mt-6" ref={payFormRef}>
+            {/* Header with payment status badge */}
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="font-semibold text-gray-800">Rent Payments</h2>
+              <div className="flex items-center gap-3">
+                <span className={`text-sm px-3 py-1 rounded-full font-medium ${
+                  isPaidThisMonth
+                    ? 'bg-green-100 text-green-600'
+                    : 'bg-red-100 text-red-500'
+                }`}>
+                  {isPaidThisMonth ? '✅ Paid This Month' : '⚠️ Due This Month'}
+                </span>
+                {!isPaidThisMonth && (
+                  <button
+                    onClick={prefillCurrentMonth}
+                    className="text-xs bg-homie-blue text-white px-3 py-1.5 rounded-lg font-medium hover:bg-blue-700 transition-all"
+                  >
+                    Mark This Month as Paid
+                  </button>
+                )}
+              </div>
+            </div>
 
             <form onSubmit={handleAddPayment} className="space-y-3 mb-5">
               <div className="grid grid-cols-2 gap-3">
-                <input
-                  placeholder="Month (e.g. July 2026)"
-                  value={payForm.month}
-                  onChange={e => setPayForm({ ...payForm, month: e.target.value })}
-                  required
-                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
-                />
+                <div>
+                  <input
+                    placeholder="Month (YYYY-MM, e.g. 2026-07)"
+                    value={payForm.month}
+                    onChange={e => setPayForm({ ...payForm, month: e.target.value })}
+                    required
+                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                  />
+                  <p className="text-xs text-gray-400 mt-1">Use YYYY-MM format for auto-detection</p>
+                </div>
                 <input
                   type="number"
                   placeholder="Amount"
@@ -353,17 +384,11 @@ export default function TenantDetail() {
                       <p className="text-xs text-gray-500">₹{p.amount} — {p.payment_method} — {p.payment_date}</p>
                     </div>
                     <div className="flex items-center gap-3">
-                      <span className="text-xs px-2 py-1 rounded bg-green-100 text-green-600">
-                        {p.status}
-                      </span>
+                      <span className="text-xs px-2 py-1 rounded bg-green-100 text-green-600">{p.status}</span>
                       {p.receipt_url && (
-                        <button onClick={() => viewReceipt(p.receipt_url)} className="text-xs text-homie-blue font-medium">
-                          Receipt
-                        </button>
+                        <button onClick={() => viewReceipt(p.receipt_url)} className="text-xs text-homie-blue font-medium">Receipt</button>
                       )}
-                      <button onClick={() => deletePayment(p.id, p.receipt_url)} className="text-xs text-red-500 font-medium">
-                        Delete
-                      </button>
+                      <button onClick={() => deletePayment(p.id, p.receipt_url)} className="text-xs text-red-500 font-medium">Delete</button>
                     </div>
                   </div>
                 ))}

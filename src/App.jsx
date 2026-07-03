@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider, useAuth } from './contexts/AuthContext'
+import Home from './pages/Home'
 import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import BuildingDetail from './pages/BuildingDetail'
@@ -7,6 +8,7 @@ import Buildings from './pages/Buildings'
 import Tenants from './pages/Tenants'
 import TenantDetail from './pages/TenantDetail'
 import Expenses from './pages/Expenses'
+import Profile from './pages/Profile'
 
 
 function ProtectedRoute({ children }) {
@@ -18,13 +20,16 @@ function ProtectedRoute({ children }) {
 function AppRoutes() {
   return (
     <Routes>
+      {/* Public routes */}
+      <Route path="/" element={<Home />} />
       <Route path="/login" element={<Login />} />
+
+      {/* Protected routes */}
       <Route path="/dashboard" element={
         <ProtectedRoute>
           <Dashboard />
         </ProtectedRoute>
       } />
-      <Route path="*" element={<Navigate to="/login" />} />
 
       <Route path="/buildings" element={
         <ProtectedRoute>
@@ -46,6 +51,13 @@ function AppRoutes() {
       } />
 
       <Route path="/expenses" element={<ProtectedRoute><Expenses /></ProtectedRoute>} />
+
+      <Route path="/profile" element={
+        <ProtectedRoute><Profile /></ProtectedRoute>
+      } />
+
+      {/* Catch-all → landing page */}
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   )
 }
