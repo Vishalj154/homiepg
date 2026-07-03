@@ -66,15 +66,15 @@ export default function BedModal({ bed, buildingId, roomId, onClose, onUpdate })
 
   return (
     <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
-      <div className="bg-white rounded-2xl shadow-lg p-6 w-full max-w-md">
+      <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 w-full max-w-md">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="font-bold text-gray-800">Bed {bed.bed_number}</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600">✕</button>
+          <h2 className="font-bold text-gray-800 dark:text-gray-100">Bed {bed.bed_number}</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 dark:text-gray-300">✕</button>
         </div>
 
         {isOccupied ? (
           <div>
-            <p className="text-sm text-gray-500 mb-4">This bed is currently occupied.</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-4">This bed is currently occupied.</p>
             <button
               onClick={handleVacate}
               disabled={loading}
@@ -85,27 +85,27 @@ export default function BedModal({ bed, buildingId, roomId, onClose, onUpdate })
           </div>
         ) : (
           <form onSubmit={handleAssign} className="space-y-3">
-            <p className="text-sm text-gray-500 mb-2">Assign a tenant to this bed</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Assign a tenant to this bed</p>
 
             <input
               placeholder="Full Name"
               value={form.full_name}
               onChange={e => setForm({ ...form, full_name: e.target.value })}
               required
-              className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+              className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
             />
             <input
               placeholder="Phone"
               value={form.phone}
               onChange={e => setForm({ ...form, phone: e.target.value })}
-              className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+              className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
             />
             <input
               placeholder="Email"
               type="email"
               value={form.email}
               onChange={e => setForm({ ...form, email: e.target.value })}
-              className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+              className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
             />
             <div>
               <label className="text-xs text-gray-500 block mb-1">Joining Date</label>

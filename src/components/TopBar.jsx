@@ -93,8 +93,8 @@ export default function TopBar({ title }) {
   }
 
   async function handleSignOut() {
-    await signOut()
     navigate('/')
+    await signOut()
   }
 
   return (

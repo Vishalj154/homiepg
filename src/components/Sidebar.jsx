@@ -7,6 +7,7 @@ const NAV_ITEMS = [
   { to: '/buildings', icon: '🏢', label: 'Buildings' },
   { to: '/tenants', icon: '👥', label: 'Tenants' },
   { to: '/expenses', icon: '💰', label: 'Expenses' },
+  { to: '/staff', icon: '🧹', label: 'Staff' },
   { to: '/profile', icon: '👤', label: 'Profile' },
 ]
 

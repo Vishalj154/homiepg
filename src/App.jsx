@@ -10,6 +10,7 @@ import Tenants from './pages/Tenants'
 import TenantDetail from './pages/TenantDetail'
 import Expenses from './pages/Expenses'
 import Profile from './pages/Profile'
+import Staff from './pages/Staff'
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -42,6 +43,9 @@ function AppRoutes() {
       } />
       <Route path="/expenses" element={
         <ProtectedRoute><Expenses /></ProtectedRoute>
+      } />
+      <Route path="/staff" element={
+        <ProtectedRoute><Staff /></ProtectedRoute>
       } />
       <Route path="/profile" element={
         <ProtectedRoute><Profile /></ProtectedRoute>

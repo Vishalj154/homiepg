@@ -72,8 +72,8 @@ export default function Profile() {
   }
 
   async function handleSignOut() {
-    await signOut()
     navigate('/')
+    await signOut()
   }
 
   // Initials avatar
@@ -89,19 +89,19 @@ export default function Profile() {
     : '—'
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
       <Sidebar />
       <div className="flex-1">
         <TopBar title="Profile" />
 
         <div className="px-8 py-6 max-w-5xl">
-          <h1 className="text-2xl font-bold text-gray-800 mb-1">My Profile</h1>
-          <p className="text-gray-500 text-sm mb-8">Manage your account and business details.</p>
+          <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-1">My Profile</h1>
+          <p className="text-gray-500 dark:text-gray-400 text-sm mb-8">Manage your account and business details.</p>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
             {/* ── Left: Identity card ── */}
-            <div className="bg-white rounded-2xl shadow-sm p-6 flex flex-col items-center text-center gap-4">
+            <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 flex flex-col items-center text-center gap-4">
               {/* Avatar with hover overlay */}
               <div className="relative group cursor-pointer">
                 <div className="w-24 h-24 rounded-full bg-homie-blue flex items-center justify-center text-white text-2xl font-bold shadow-lg select-none">
@@ -124,7 +124,7 @@ export default function Profile() {
                 Owner Account
               </span>
 
-              <div className="w-full border-t border-gray-100 pt-4 space-y-2 text-left">
+              <div className="w-full border-t border-gray-100 dark:border-gray-700 pt-4 space-y-2 text-left">
                 <div className="flex gap-2 text-sm">
                   <span className="text-gray-400 w-14 shrink-0">Email</span>
                   <span className="text-gray-700 text-xs truncate">{user?.email}</span>
@@ -148,8 +148,8 @@ export default function Profile() {
 
             {/* ── Right: Edit form ── */}
             <div className="lg:col-span-2 flex flex-col gap-5">
-              <div className="bg-white rounded-2xl shadow-sm p-6">
-                <h2 className="font-semibold text-gray-700 mb-5">Profile Details</h2>
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6">
+                <h2 className="font-semibold text-gray-700 dark:text-gray-100 mb-5">Profile Details</h2>
 
                 {loading ? (
                   <p className="text-gray-400 text-sm">Loading...</p>
@@ -182,7 +182,7 @@ export default function Profile() {
                         value={form.business_name}
                         onChange={e => setForm({ ...form, business_name: e.target.value })}
                         placeholder="e.g. Sharma PG Group"
-                        className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-homie-blue/30"
+                        className="w-full border border-gray-200 dark:border-gray-700 rounded-xl px-4 py-2.5 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-homie-blue/30"
                       />
                     </div>
 
@@ -224,9 +224,9 @@ export default function Profile() {
               </div>
 
               {/* Sign Out — single canonical location */}
-              <div className="bg-white rounded-2xl shadow-sm p-6 border border-red-100">
-                <h2 className="font-semibold text-gray-700 mb-1">Sign Out</h2>
-                <p className="text-sm text-gray-500 mb-4">
+              <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 border border-red-100 dark:border-red-700">
+                <h2 className="font-semibold text-gray-700 dark:text-gray-100 mb-1">Sign Out</h2>
+                <p className="text-sm text-gray-400 dark:text-gray-400 mb-4">
                   You'll be returned to the HomiePG homepage.
                 </p>
                 <button

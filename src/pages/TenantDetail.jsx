@@ -159,7 +159,7 @@ export default function TenantDetail() {
   if (loading) return <p className="p-8 text-gray-400">Loading...</p>
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex">
       <Sidebar />
       <div className="flex-1">
         <TopBar title={tenant?.full_name || 'Tenant'} />
@@ -170,7 +170,7 @@ export default function TenantDetail() {
           </button>
 
           {/* ── Profile header card ── */}
-          <div className="bg-white rounded-2xl shadow-sm p-6 mb-6">
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-sm p-6 mb-6">
             <div className="flex items-start gap-5">
               {/* Initials avatar */}
               <div className="w-16 h-16 rounded-full bg-homie-blue flex items-center justify-center text-white text-xl font-bold shrink-0 shadow">
@@ -180,7 +180,7 @@ export default function TenantDetail() {
               <div className="flex-1 min-w-0">
                 {/* Name + badges row */}
                 <div className="flex flex-wrap items-center gap-2 mb-2">
-                  <h2 className="text-xl font-bold text-gray-900">{tenant?.full_name}</h2>
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">{tenant?.full_name}</h2>
                   <span className={`text-xs px-2.5 py-1 rounded-full font-medium ${
                     tenant?.status === 'active'
                       ? 'bg-green-100 text-green-600'
@@ -198,22 +198,22 @@ export default function TenantDetail() {
                 {/* Meta info */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-sm">
                   {tenant?.buildings?.name && (
-                    <p className="text-gray-500">🏢 {tenant.buildings.name}</p>
+                    <p className="text-gray-500 dark:text-gray-400">🏢 {tenant.buildings.name}</p>
                   )}
                   {tenant?.joining_date && (
-                    <p className="text-gray-500">📅 Joined {tenant.joining_date}</p>
+                    <p className="text-gray-500 dark:text-gray-400">📅 Joined {tenant.joining_date}</p>
                   )}
                   {tenant?.monthly_rent && (
-                    <p className="text-gray-500">💰 ₹{tenant.monthly_rent}/month</p>
+                    <p className="text-gray-500 dark:text-gray-400">💰 ₹{tenant.monthly_rent}/month</p>
                   )}
                   {tenant?.deposit && (
-                    <p className="text-gray-500">🔒 Deposit ₹{tenant.deposit}</p>
+                    <p className="text-gray-500 dark:text-gray-400">🔒 Deposit ₹{tenant.deposit}</p>
                   )}
                   {tenant?.phone && (
-                    <p className="text-gray-500">📞 {tenant.phone}</p>
+                    <p className="text-gray-500 dark:text-gray-400">📞 {tenant.phone}</p>
                   )}
                   {tenant?.email && (
-                    <p className="text-gray-500">✉️ {tenant.email}</p>
+                    <p className="text-gray-500 dark:text-gray-400">✉️ {tenant.email}</p>
                   )}
                 </div>
               </div>
@@ -221,8 +221,8 @@ export default function TenantDetail() {
           </div>
 
           {/* ── Upload KYC ── */}
-          <div className="bg-white rounded-xl shadow-sm p-5 mb-6">
-            <h2 className="font-semibold text-gray-800 mb-3">Upload KYC Document</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 mb-6">
+            <h2 className="font-semibold text-gray-800 dark:text-gray-100 mb-3">Upload KYC Document</h2>
             <form onSubmit={handleUpload} className="space-y-3">
               <div className="flex gap-3">
                 <select
@@ -238,14 +238,14 @@ export default function TenantDetail() {
                   placeholder="Document Number"
                   value={docNumber}
                   onChange={e => setDocNumber(e.target.value)}
-                  className="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                  className="flex-1 border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
                 />
               </div>
               <input
                 type="file"
                 accept="image/*,.pdf"
                 onChange={e => setFile(e.target.files[0])}
-                className="w-full text-sm"
+                className="w-full text-sm text-gray-800 dark:text-gray-100"
               />
               <button
                 type="submit"
@@ -258,24 +258,24 @@ export default function TenantDetail() {
           </div>
 
           {/* ── Documents List ── */}
-          <div className="bg-white rounded-xl shadow-sm p-5 mb-6">
-            <h2 className="font-semibold text-gray-800 mb-3">Documents</h2>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5 mb-6">
+            <h2 className="font-semibold text-gray-800 dark:text-gray-100 mb-3">Documents</h2>
             {documents.length === 0 ? (
               <p className="text-sm text-gray-400">No documents uploaded yet.</p>
             ) : (
               <div className="space-y-2">
                 {documents.map(doc => (
-                  <div key={doc.id} className="flex items-center justify-between border border-gray-100 rounded-lg px-4 py-3">
+                  <div key={doc.id} className="flex items-center justify-between border border-gray-100 dark:border-gray-700 rounded-lg px-4 py-3 bg-white dark:bg-gray-900">
                     <div>
-                      <p className="text-sm font-medium text-gray-700 capitalize">{doc.document_type}</p>
-                      <p className="text-xs text-gray-500">{doc.document_number || 'No number provided'}</p>
+                      <p className="text-sm font-medium text-gray-700 dark:text-gray-100 capitalize">{doc.document_type}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">{doc.document_number || 'No number provided'}</p>
                     </div>
                     <div className="flex items-center gap-3">
                       <span className={`text-xs px-2 py-1 rounded ${doc.verified ? 'bg-green-100 text-green-600' : 'bg-orange-100 text-orange-500'}`}>
                         {doc.verified ? 'Verified' : 'Pending'}
                       </span>
                       <button onClick={() => viewDocument(doc.file_url)} className="text-xs text-homie-blue font-medium">View</button>
-                      <button onClick={() => toggleVerified(doc.id, doc.verified)} className="text-xs text-gray-500 font-medium">
+                      <button onClick={() => toggleVerified(doc.id, doc.verified)} className="text-xs text-gray-500 dark:text-gray-300 font-medium">
                         {doc.verified ? 'Unverify' : 'Verify'}
                       </button>
                       <button onClick={() => deleteDocument(doc.id, doc.file_url)} className="text-xs text-red-500 font-medium">Delete</button>
@@ -287,9 +287,9 @@ export default function TenantDetail() {
           </div>
 
           {/* ── Rent Payments ── */}
-          <div className="bg-white rounded-xl shadow-sm p-5" ref={payFormRef}>
+          <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5" ref={payFormRef}>
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-gray-800">Rent Payments</h2>
+              <h2 className="font-semibold text-gray-800 dark:text-gray-100">Rent Payments</h2>
               <div className="flex items-center gap-3">
                 <span className={`text-sm px-3 py-1 rounded-full font-medium ${
                   isPaidThisMonth ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-500'
@@ -315,7 +315,7 @@ export default function TenantDetail() {
                     value={payForm.month}
                     onChange={e => setPayForm({ ...payForm, month: e.target.value })}
                     required
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                    className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
                   />
                   <p className="text-xs text-gray-400 mt-1">Use YYYY-MM format for auto-detection</p>
                 </div>
@@ -325,7 +325,7 @@ export default function TenantDetail() {
                   value={payForm.amount}
                   onChange={e => setPayForm({ ...payForm, amount: e.target.value })}
                   required
-                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
                 />
               </div>
               <div className="grid grid-cols-2 gap-3">
@@ -334,12 +334,12 @@ export default function TenantDetail() {
                   value={payForm.payment_date}
                   onChange={e => setPayForm({ ...payForm, payment_date: e.target.value })}
                   required
-                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
                 />
                 <select
                   value={payForm.payment_method}
                   onChange={e => setPayForm({ ...payForm, payment_method: e.target.value })}
-                  className="border border-gray-200 rounded-lg px-3 py-2 text-sm"
+                  className="border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
                 >
                   <option value="cash">Cash</option>
                   <option value="upi">UPI</option>
@@ -370,10 +370,10 @@ export default function TenantDetail() {
             ) : (
               <div className="space-y-2">
                 {payments.map(p => (
-                  <div key={p.id} className="flex items-center justify-between border border-gray-100 rounded-lg px-4 py-3">
+                  <div key={p.id} className="flex items-center justify-between border border-gray-100 dark:border-gray-700 rounded-lg px-4 py-3 bg-white dark:bg-gray-900">
                     <div>
-                      <p className="text-sm font-medium text-gray-700">{p.month}</p>
-                      <p className="text-xs text-gray-500">₹{p.amount} — {p.payment_method} — {p.payment_date}</p>
+                      <p className="text-sm font-medium text-gray-700 dark:text-gray-100">{p.month}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400">₹{p.amount} — {p.payment_method} — {p.payment_date}</p>
                     </div>
                     <div className="flex items-center gap-3">
                       <span className="text-xs px-2 py-1 rounded bg-green-100 text-green-600">{p.status}</span>

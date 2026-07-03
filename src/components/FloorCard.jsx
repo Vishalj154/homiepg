@@ -40,7 +40,7 @@ export default function FloorCard({ floor, buildingId, onUpdate }) {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-5">
+    <div className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-5">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-semibold text-gray-700">
           {floor.floor_name || `Floor ${floor.floor_number}`}
@@ -56,31 +56,31 @@ export default function FloorCard({ floor, buildingId, onUpdate }) {
       {showRoomForm && (
         <form onSubmit={handleAddRoom} className="flex gap-3 items-end mb-4 flex-wrap">
           <div>
-            <label className="text-xs text-gray-500 block mb-1">Room No.</label>
+            <label className="text-xs text-gray-500 dark:text-gray-300 block mb-1">Room No.</label>
             <input
               value={roomNumber}
               onChange={e => setRoomNumber(e.target.value)}
               required
-              className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm w-24"
+              className="border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm w-24 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
             />
           </div>
           <div>
-            <label className="text-xs text-gray-500 block mb-1">Beds</label>
+            <label className="text-xs text-gray-500 dark:text-gray-300 block mb-1">Beds</label>
             <input
               type="number"
               min="1"
               value={capacity}
               onChange={e => setCapacity(e.target.value)}
-              className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm w-20"
+              className="border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm w-20 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
             />
           </div>
           <div>
-            <label className="text-xs text-gray-500 block mb-1">Rent/bed</label>
+            <label className="text-xs text-gray-500 dark:text-gray-300 block mb-1">Rent/bed</label>
             <input
               type="number"
               value={rent}
               onChange={e => setRent(e.target.value)}
-              className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm w-24"
+              className="border border-gray-200 dark:border-gray-700 rounded-lg px-3 py-1.5 text-sm w-24 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
             />
           </div>
           <button type="submit" className="bg-homie-green text-white px-4 py-1.5 rounded-lg text-sm font-medium">

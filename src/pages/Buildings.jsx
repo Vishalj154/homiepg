@@ -43,6 +43,7 @@ export default function Buildings() {
     power_backup: false,
     parking_available: false,
     laundry_available: false,
+    cleaning_staff: false,
     description: '',
   })
 
@@ -75,6 +76,7 @@ export default function Buildings() {
         food_type: '', water_supply_timing: '',
         wifi_available: false, power_backup: false,
         parking_available: false, laundry_available: false,
+        cleaning_staff: false,
         description: '',
       })
       setShowForm(false)
@@ -107,17 +109,17 @@ export default function Buildings() {
 
           {/* Filter + Add bar */}
           <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
-            <div className="flex gap-3">
+            <div className="flex gap-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-3">
               <input
                 placeholder="Filter by city..."
                 value={filterCity}
                 onChange={e => setFilterCity(e.target.value)}
-                className="border border-gray-200 rounded-lg px-4 py-2 text-sm w-48"
+                className="border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm w-48 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               />
               <select
                 value={filterGender}
                 onChange={e => setFilterGender(e.target.value)}
-                className="border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                className="border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               >
                 <option value="all">All Types</option>
                 <option value="unisex">Co-living</option>
@@ -136,27 +138,27 @@ export default function Buildings() {
 
           {/* Add Building Form */}
           {showForm && (
-            <form onSubmit={handleAdd} className="bg-white rounded-xl shadow-sm p-6 mb-6 space-y-4 max-w-2xl">
-              <h2 className="font-semibold text-gray-700">New Building</h2>
+            <form onSubmit={handleAdd} className="bg-white dark:bg-gray-800 rounded-xl shadow-sm p-6 mb-6 space-y-4 max-w-2xl">
+              <h2 className="font-semibold text-gray-700 dark:text-gray-100">New Building</h2>
 
               <input
                 placeholder="Building Name"
                 value={form.name}
                 onChange={e => setForm({ ...form, name: e.target.value })}
                 required
-                className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               />
               <input
                 placeholder="Image URL (paste from Unsplash)"
                 value={form.image_url}
                 onChange={e => setForm({ ...form, image_url: e.target.value })}
-                className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               />
               <input
                 placeholder="Address"
                 value={form.address}
                 onChange={e => setForm({ ...form, address: e.target.value })}
-                className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               />
               <div className="grid grid-cols-3 gap-3">
                 <input
@@ -183,7 +185,7 @@ export default function Buildings() {
               <select
                 value={form.gender_type}
                 onChange={e => setForm({ ...form, gender_type: e.target.value })}
-                className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               >
                 <option value="unisex">Co-living</option>
                 <option value="male">Male Only</option>
@@ -194,7 +196,7 @@ export default function Buildings() {
               <select
                 value={form.food_type}
                 onChange={e => setForm({ ...form, food_type: e.target.value })}
-                className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               >
                 <option value="">Food — Select type</option>
                 <option value="veg">🍽️ Veg Only</option>
@@ -208,7 +210,7 @@ export default function Buildings() {
                 placeholder="Water Supply Timing (e.g. 24x7 or 6–9 AM &amp; 6–9 PM)"
                 value={form.water_supply_timing}
                 onChange={e => setForm({ ...form, water_supply_timing: e.target.value })}
-                className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm"
+                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               />
 
               {/* Amenity toggles */}
@@ -218,15 +220,16 @@ export default function Buildings() {
                   { key: 'power_backup', label: '🔌 Power Backup' },
                   { key: 'parking_available', label: '🚗 Parking Available' },
                   { key: 'laundry_available', label: '🧺 Laundry Available' },
+                  { key: 'cleaning_staff', label: '🧹 Cleaning Staff Available' },
                 ].map(({ key, label }) => (
-                  <label key={key} className="flex items-center gap-3 border border-gray-200 rounded-lg px-4 py-2.5 cursor-pointer hover:bg-gray-50 transition-all">
+                  <label key={key} className="flex items-center gap-3 border border-gray-200 rounded-lg px-4 py-2.5 cursor-pointer hover:bg-gray-50 transition-all dark:border-gray-700 dark:hover:bg-gray-700">
                     <input
                       type="checkbox"
                       checked={form[key]}
                       onChange={e => setForm({ ...form, [key]: e.target.checked })}
                       className="w-4 h-4 accent-homie-blue"
                     />
-                    <span className="text-sm text-gray-700">{label}</span>
+                    <span className="text-sm text-gray-700 dark:text-gray-200">{label}</span>
                   </label>
                 ))}
               </div>
@@ -237,7 +240,7 @@ export default function Buildings() {
                 value={form.description}
                 onChange={e => setForm({ ...form, description: e.target.value })}
                 rows={3}
-                className="w-full border border-gray-200 rounded-lg px-4 py-2 text-sm resize-none"
+                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm resize-none bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               />
 
               <button
@@ -264,8 +267,8 @@ export default function Buildings() {
                     className="w-full h-40 object-cover"
                   />
                   <div className="p-4">
-                    <h3 className="font-semibold text-gray-800">{b.name}</h3>
-                    <p className="text-sm text-gray-500 mb-2">
+                    <h3 className="font-semibold text-gray-800 dark:text-gray-100">{b.name}</h3>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">
                       {b.city}, {b.state} — {genderLabel[b.gender_type] || b.gender_type}
                     </p>
 
@@ -289,13 +292,16 @@ export default function Buildings() {
                       {b.laundry_available && (
                         <span className="text-xs bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full">🧺 Laundry</span>
                       )}
+                      {b.cleaning_staff && (
+                        <span className="text-xs bg-slate-50 text-slate-600 px-2 py-0.5 rounded-full">🧹 Cleaning Staff</span>
+                      )}
                     </div>
 
                     {b.description && (
-                      <p className="text-xs text-gray-500 mb-3 line-clamp-2">{b.description}</p>
+                      <p className="text-xs text-gray-500 dark:text-gray-400 mb-3 line-clamp-2">{b.description}</p>
                     )}
 
-                    <div className="flex justify-between items-center">
+                    <div className="flex items-center justify-between">
                       <button
                         onClick={() => navigate(`/buildings/${b.id}`)}
                         className="text-sm text-homie-blue font-medium"
