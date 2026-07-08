@@ -1,6 +1,24 @@
 import { supabase } from '../../../lib/supabase'
 
 const FALLBACK_IMAGE = 'https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1200&q=80'
+const CACHE_KEY = 'homiepg-public-pgs'
+
+function readCachedPGs() {
+  try {
+    const cached = localStorage.getItem(CACHE_KEY)
+    return cached ? JSON.parse(cached) : []
+  } catch {
+    return []
+  }
+}
+
+function writeCachedPGs(pgs) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify(pgs))
+  } catch {
+    // ignore storage failures
+  }
+}
 
 function toDisplayRent(index) {
   return 9000 + (index % 6) * 1000 + (index % 3) * 350
@@ -54,22 +72,38 @@ function normalizeBuilding(building, index) {
 }
 
 export async function getPublicPGs() {
-  const { data, error } = await supabase
-    .from('buildings')
-    .select('*')
-    .order('created_at', { ascending: false })
+  try {
+    const { data, error } = await supabase
+      .from('buildings')
+      .select('*')
+      .order('created_at', { ascending: false })
 
-  if (error) throw error
-  return (data || []).map(normalizeBuilding)
+    if (error) throw error
+
+    const pgs = (data || []).map(normalizeBuilding)
+    writeCachedPGs(pgs)
+    return pgs
+  } catch (error) {
+    console.error('Failed to load public PG listings:', error)
+    const cached = readCachedPGs()
+    return cached.length ? cached : []
+  }
 }
 
 export async function getPublicPGById(id) {
-  const { data, error } = await supabase
-    .from('buildings')
-    .select('*')
-    .eq('id', id)
-    .single()
+  try {
+    const { data, error } = await supabase
+      .from('buildings')
+      .select('*')
+      .eq('id', id)
+      .single()
 
-  if (error) throw error
-  return normalizeBuilding(data, 0)
+    if (error) throw error
+
+    return normalizeBuilding(data, 0)
+  } catch (error) {
+    console.error('Failed to load public PG details:', error)
+    const cached = readCachedPGs()
+    return cached.find((pg) => pg.id === id) || null
+  }
 }

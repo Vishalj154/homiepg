@@ -377,6 +377,27 @@ CREATE POLICY "Public read access for subscription plans" ON public.subscription
   FOR SELECT
   USING (true);
 
+DROP POLICY IF EXISTS "Public read access for buildings" ON public.buildings;
+CREATE POLICY "Public read access for buildings" ON public.buildings
+  FOR SELECT
+  USING (true);
+
+DROP POLICY IF EXISTS "Owners can manage their own buildings" ON public.buildings;
+CREATE POLICY "Owners can manage their own buildings" ON public.buildings
+  FOR INSERT
+  WITH CHECK (owner_id = auth.uid());
+
+DROP POLICY IF EXISTS "Owners can update their own buildings" ON public.buildings;
+CREATE POLICY "Owners can update their own buildings" ON public.buildings
+  FOR UPDATE
+  USING (owner_id = auth.uid())
+  WITH CHECK (owner_id = auth.uid());
+
+DROP POLICY IF EXISTS "Owners can delete their own buildings" ON public.buildings;
+CREATE POLICY "Owners can delete their own buildings" ON public.buildings
+  FOR DELETE
+  USING (owner_id = auth.uid());
+
 -- Storage bucket suggestions -------------------------------------------------
 -- 1. pg-images
 -- 2. kyc-documents
