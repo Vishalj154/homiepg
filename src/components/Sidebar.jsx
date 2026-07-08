@@ -8,6 +8,7 @@ const NAV_ITEMS = [
   { to: '/tenants', icon: '👥', label: 'Tenants' },
   { to: '/expenses', icon: '💰', label: 'Expenses' },
   { to: '/staff', icon: '🧹', label: 'Staff' },
+  { to: '/complaints', icon: '📋', label: 'Complaints' },
   { to: '/profile', icon: '👤', label: 'Profile' },
 ]
 
@@ -30,11 +31,13 @@ export default function Sidebar() {
       {/* Logo + toggle */}
       <div className={`flex items-center px-3 py-5 mb-4 ${collapsed ? 'justify-center' : 'justify-between'}`}>
         {!collapsed && (
-          <img
-            src={logo}
-            alt="HomiePG"
-            className="h-12 w-auto object-contain"
-          />
+          <div className="rounded-3xl bg-white/90 border border-gray-200 p-2 shadow-sm dark:bg-slate-950/90 dark:border-gray-700">
+            <img
+              src={logo}
+              alt="HomiePG"
+              className="h-12 w-auto object-contain"
+            />
+          </div>
         )}
         {collapsed && (
           <span className="text-xl">🏡</span>

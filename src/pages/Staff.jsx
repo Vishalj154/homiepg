@@ -22,10 +22,13 @@ export default function Staff() {
   const [filterDesignation, setFilterDesignation] = useState('all')
   const [form, setForm] = useState({
     employee_name: '',
+    phone: '',
     building_id: '',
     designation: 'cleaner',
     salary: '',
     joining_date: '',
+    verification_status: 'pending',
+    verification_document_url: '',
   })
 
   useEffect(() => {
@@ -49,16 +52,19 @@ export default function Staff() {
       owner_id: user.id,
       building_id: form.building_id || null,
       employee_name: form.employee_name,
+      phone: form.phone,
       designation: form.designation,
       salary: parseFloat(form.salary) || 0,
       joining_date: form.joining_date || null,
+      verification_status: form.verification_status,
+      verification_document_url: form.verification_document_url || null,
       status: 'active',
     })
 
     if (error) {
       alert(error.message)
     } else {
-      setForm({ employee_name: '', building_id: '', designation: 'cleaner', salary: '', joining_date: '' })
+      setForm({ employee_name: '', phone: '', building_id: '', designation: 'cleaner', salary: '', joining_date: '', verification_status: 'pending', verification_document_url: '' })
       setShowForm(false)
       fetchAll()
     }
@@ -131,6 +137,14 @@ export default function Staff() {
                 className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
               />
 
+              <input
+                placeholder="Phone Number"
+                value={form.phone}
+                onChange={e => setForm({ ...form, phone: e.target.value })}
+                required
+                className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
+              />
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <select
                   value={form.building_id}
@@ -154,19 +168,25 @@ export default function Staff() {
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <input
-                  type="number"
-                  placeholder="Salary"
-                  value={form.salary}
-                  onChange={e => setForm({ ...form, salary: e.target.value })}
-                  className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
-                />
-                <input
-                  type="date"
-                  value={form.joining_date}
-                  onChange={e => setForm({ ...form, joining_date: e.target.value })}
-                  className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
-                />
+                <div>
+                  <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Monthly Salary (₹)</label>
+                  <input
+                    type="number"
+                    placeholder="Salary"
+                    value={form.salary}
+                    onChange={e => setForm({ ...form, salary: e.target.value })}
+                    className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
+                  />
+                </div>
+                <div>
+                  <label className="text-xs text-gray-500 dark:text-gray-400 block mb-1">Joining Date</label>
+                  <input
+                    type="date"
+                    value={form.joining_date}
+                    onChange={e => setForm({ ...form, joining_date: e.target.value })}
+                    className="w-full border border-gray-200 dark:border-gray-700 rounded-lg px-4 py-2 text-sm bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
+                  />
+                </div>
               </div>
 
               <button type="submit" className="w-full bg-homie-green text-white py-2.5 rounded-lg font-medium">
@@ -185,9 +205,12 @@ export default function Staff() {
                 <thead className="bg-gray-50 dark:bg-gray-900 text-gray-500 dark:text-gray-400 text-left">
                   <tr>
                     <th className="px-5 py-3">Name</th>
+                    <th className="px-5 py-3">Phone</th>
                     <th className="px-5 py-3">Building</th>
                     <th className="px-5 py-3">Designation</th>
                     <th className="px-5 py-3">Salary</th>
+                    <th className="px-5 py-3">Verified</th>
+                    <th className="px-5 py-3">Docs</th>
                     <th className="px-5 py-3">Status</th>
                     <th className="px-5 py-3"></th>
                   </tr>
@@ -196,9 +219,31 @@ export default function Staff() {
                   {filteredEmployees.map(emp => (
                     <tr key={emp.id} className="border-t border-gray-100 dark:border-gray-700">
                       <td className="px-5 py-3 font-medium text-gray-800 dark:text-gray-100">{emp.employee_name}</td>
+                      <td className="px-5 py-3 text-gray-500 dark:text-gray-300">{emp.phone || '—'}</td>
                       <td className="px-5 py-3 text-gray-500 dark:text-gray-300">{emp.buildings?.name || 'Unassigned'}</td>
                       <td className="px-5 py-3 capitalize text-gray-500 dark:text-gray-300">{emp.designation}</td>
                       <td className="px-5 py-3 text-gray-500 dark:text-gray-300">₹{emp.salary}</td>
+                      <td className="px-5 py-3">
+                        <span className={`text-xs px-2 py-1 rounded-full font-medium ${
+                          emp.verification_status === 'verified'
+                            ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-300'
+                            : emp.verification_status === 'rejected'
+                              ? 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-300'
+                              : 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-200'
+                        }`}>
+                          {emp.verification_status || 'pending'}
+                        </span>
+                      </td>
+                      <td className="px-5 py-3 text-gray-500 dark:text-gray-300">
+                        {emp.verification_document_url ? (
+                          <button
+                            onClick={() => window.open(emp.verification_document_url, '_blank')}
+                            className="text-sm text-homie-blue font-medium"
+                          >
+                            View Docs
+                          </button>
+                        ) : '—'}
+                      </td>
                       <td className="px-5 py-3">
                         <span className={`text-xs px-2 py-1 rounded-full font-medium ${emp.status === 'active' ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-300' : 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-300'}`}>
                           {emp.status}

@@ -137,6 +137,15 @@ export default function Dashboard() {
                 <StatCard label="Pending Rent" value={stats.pendingRent} icon="⚠️" color="bg-red-50 dark:bg-red-900/30 text-red-500" />
               </div>
 
+              <div className="mb-10">
+                <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">Quick Actions</h2>
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  <ActionCard icon="🏢" label="Manage Buildings" href="/buildings" />
+                  <ActionCard icon="👥" label="Manage Tenants" href="/tenants" />
+                  <ActionCard icon="💰" label="Expenses" href="/expenses" />
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-4 mb-8">
                 <div className="bg-white dark:bg-gray-800 rounded-3xl shadow-sm p-5">
                   <div className="flex items-center justify-between mb-4">
@@ -198,13 +207,6 @@ export default function Dashboard() {
               </div>
             </>
           )}
-
-          <h2 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">Quick Actions</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            <ActionCard icon="🏢" label="Manage Buildings" href="/buildings" />
-            <ActionCard icon="👥" label="Manage Tenants" href="/tenants" />
-            <ActionCard icon="💰" label="Expenses" href="/expenses" />
-          </div>
         </div>
       </div>
     </div>

@@ -11,6 +11,10 @@ import TenantDetail from './pages/TenantDetail'
 import Expenses from './pages/Expenses'
 import Profile from './pages/Profile'
 import Staff from './pages/Staff'
+import Complaints from './pages/Complaints'
+import TenantModule from './modules/tenant/TenantModule'
+import AdminModule from './modules/admin/AdminModule'
+import OwnerModule from './modules/owner/OwnerModule'
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth()
@@ -29,6 +33,9 @@ function AppRoutes() {
       <Route path="/dashboard" element={
         <ProtectedRoute><Dashboard /></ProtectedRoute>
       } />
+      <Route path="/owner/*" element={<OwnerModule />} />
+      <Route path="/tenant/*" element={<TenantModule />} />
+      <Route path="/admin/*" element={<AdminModule />} />
       <Route path="/buildings" element={
         <ProtectedRoute><Buildings /></ProtectedRoute>
       } />
@@ -46,6 +53,9 @@ function AppRoutes() {
       } />
       <Route path="/staff" element={
         <ProtectedRoute><Staff /></ProtectedRoute>
+      } />
+      <Route path="/complaints" element={
+        <ProtectedRoute><Complaints /></ProtectedRoute>
       } />
       <Route path="/profile" element={
         <ProtectedRoute><Profile /></ProtectedRoute>
