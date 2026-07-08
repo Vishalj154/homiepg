@@ -362,14 +362,20 @@ ALTER TABLE public.platform_settings ENABLE ROW LEVEL SECURITY;
 
 -- Recommended RLS policies (starter templates) -------------------------------
 -- These should be adapted to your application's auth requirements.
-CREATE POLICY IF NOT EXISTS "Users can view own profile" ON public.profiles
-  FOR SELECT USING (auth.uid() = id);
+DROP POLICY IF EXISTS "Users can view own profile" ON public.profiles;
+CREATE POLICY "Users can view own profile" ON public.profiles
+  FOR SELECT
+  USING (auth.uid() = id);
 
-CREATE POLICY IF NOT EXISTS "Users can update own profile" ON public.profiles
-  FOR UPDATE USING (auth.uid() = id);
+DROP POLICY IF EXISTS "Users can update own profile" ON public.profiles;
+CREATE POLICY "Users can update own profile" ON public.profiles
+  FOR UPDATE
+  USING (auth.uid() = id);
 
-CREATE POLICY IF NOT EXISTS "Public read access for subscription plans" ON public.subscription_plans
-  FOR SELECT USING (true);
+DROP POLICY IF EXISTS "Public read access for subscription plans" ON public.subscription_plans;
+CREATE POLICY "Public read access for subscription plans" ON public.subscription_plans
+  FOR SELECT
+  USING (true);
 
 -- Storage bucket suggestions -------------------------------------------------
 -- 1. pg-images

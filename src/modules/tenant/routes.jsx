@@ -10,7 +10,7 @@ import TenantAuth from './pages/TenantAuth'
 export const tenantRoutes = [
   { path: '', element: <TenantHome /> },
   { path: 'search', element: <SearchPage /> },
-  { path: 'pg-details', element: <PgDetails /> },
+  { path: 'pg-details/:id', element: <PgDetails /> },
   { path: 'bed-selection', element: <BedSelection /> },
   { path: 'booking', element: <BookingPage /> },
   { path: 'bookings', element: <PlaceholderPage title="Bookings" subtitle="Your reservation history" description="Track confirmed, pending, and completed stays in one place." /> },

@@ -1,7 +1,8 @@
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import ModuleShell from '../../shared/components/ModuleShell'
 import SectionCard from '../../shared/components/SectionCard'
-import { featuredPgs, nearbyPgs } from '../data/mockData'
+import { getPublicPGs } from '../services/pgService'
 
 const navItems = [
   { label: 'Home', to: '/tenant', icon: '🏠' },
@@ -38,7 +39,7 @@ function PGCard({ pg }) {
             <p className="text-lg font-semibold text-cyan-600">{pg.rent}/month</p>
             <p className="text-sm text-slate-500">{pg.beds} vacant beds</p>
           </div>
-          <Link to="/tenant/pg-details" className="rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white dark:bg-cyan-600">View</Link>
+          <Link to={`/tenant/pg-details/${pg.id}`} className="rounded-full bg-slate-900 px-4 py-2 text-sm font-medium text-white dark:bg-cyan-600">View</Link>
         </div>
       </div>
     </div>
@@ -46,6 +47,15 @@ function PGCard({ pg }) {
 }
 
 export default function TenantHome() {
+  const [pgs, setPgs] = useState([])
+
+  useEffect(() => {
+    getPublicPGs().then(setPgs).catch(() => setPgs([]))
+  }, [])
+
+  const featuredPgs = pgs.slice(0, 2)
+  const nearbyPgs = pgs.slice(2, 5)
+
   return (
     <ModuleShell title="Tenant Module" subtitle="Find your perfect stay" navItems={navItems} accent="from-violet-500 to-cyan-600">
       <div className="space-y-6">
