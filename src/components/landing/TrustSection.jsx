@@ -1,4 +1,3 @@
-import { useRef } from 'react'
 import { useInView, useCounter } from '../../hooks/useAnimations'
 
 const STATS = [

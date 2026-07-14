@@ -3,7 +3,7 @@ import { useInView } from '../../hooks/useAnimations'
 export default function MobileApp() {
   const [ref, vis] = useInView()
   return (
-    <section ref={ref} className="py-20 sm:py-28 bg-homie-bg overflow-hidden" aria-label="Mobile app">
+    <section id="mobile-app" ref={ref} className="py-20 sm:py-28 bg-homie-bg overflow-hidden" aria-label="Mobile app">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           {/* Left — Content */}

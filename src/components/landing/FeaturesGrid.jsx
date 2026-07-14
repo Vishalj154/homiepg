@@ -18,7 +18,7 @@ const FEATURES = [
 export default function FeaturesGrid() {
   const [ref, vis] = useInView()
   return (
-    <section ref={ref} className="py-20 sm:py-28 bg-homie-bg" aria-label="All features">
+    <section id="features" ref={ref} className="py-20 sm:py-28 bg-homie-bg" aria-label="All features">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className={`text-center mb-14 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-homie-purple bg-homie-purple/[0.06] px-4 py-1.5 rounded-full mb-4">Platform Features</span>

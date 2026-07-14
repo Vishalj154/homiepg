@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useInView } from '../../hooks/useAnimations'
 
 const REVIEWS = [
@@ -25,11 +25,19 @@ function Stars({ count }) {
 export default function Testimonials() {
   const [ref, vis] = useInView()
   const [page, setPage] = useState(0)
-  const perPage = typeof window !== 'undefined' && window.innerWidth < 768 ? 1 : 3
+  const [perPage, setPerPage] = useState(3)
+
+  useEffect(() => {
+    const update = () => setPerPage(window.innerWidth < 768 ? 1 : 3)
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
+
   const pages = Math.ceil(REVIEWS.length / perPage)
 
   return (
-    <section ref={ref} className="py-20 sm:py-28 bg-homie-bg" aria-label="Testimonials">
+    <section id="testimonials" ref={ref} className="py-20 sm:py-28 bg-homie-bg" aria-label="Testimonials">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className={`text-center mb-14 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-amber-500 bg-amber-50 px-4 py-1.5 rounded-full mb-4">Testimonials</span>

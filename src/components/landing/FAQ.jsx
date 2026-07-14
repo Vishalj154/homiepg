@@ -37,7 +37,7 @@ export default function FAQ() {
   const [openIdx, setOpenIdx] = useState(0)
 
   return (
-    <section ref={ref} className="py-20 sm:py-28 bg-homie-bg" aria-label="Frequently asked questions">
+    <section id="faq" ref={ref} className="py-20 sm:py-28 bg-homie-bg" aria-label="Frequently asked questions">
       <div className="max-w-3xl mx-auto px-4 sm:px-6">
         <div className={`text-center mb-14 transition-all duration-700 ${vis ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
           <span className="inline-block text-xs font-semibold tracking-widest uppercase text-homie-blue bg-homie-blue/[0.06] px-4 py-1.5 rounded-full mb-4">FAQ</span>

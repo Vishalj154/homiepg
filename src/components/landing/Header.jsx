@@ -7,8 +7,8 @@ const NAV_LINKS = [
   { label: 'Find PG', href: '#search' },
   { label: 'Cities', href: '#cities' },
   { label: 'For Owners', href: '#for-owners' },
-  { label: 'Blog', href: '#blog' },
-  { label: 'About', href: '#why' },
+  { label: 'Pricing', href: '#pricing' },
+  { label: 'About', href: '#about' },
   { label: 'Contact', href: '#contact' },
 ]
 
@@ -86,9 +86,9 @@ export default function Header() {
             >
               Sign Up
             </button>
-            <button className="text-sm font-semibold px-5 py-2.5 bg-homie-blue text-white rounded-xl hover:shadow-lg hover:shadow-homie-blue/25 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 cursor-pointer btn-ripple">
+            <a href="#for-owners" className="text-sm font-semibold px-5 py-2.5 bg-homie-blue text-white rounded-xl hover:shadow-lg hover:shadow-homie-blue/25 hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 cursor-pointer btn-ripple">
               List Your PG
-            </button>
+            </a>
           </div>
 
           {/* Mobile Toggle */}
