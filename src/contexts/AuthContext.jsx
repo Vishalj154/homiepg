@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import { fetchProfileForUser, signInWithRole, signUpWithRole } from '../services/auth.service'
 
 const AuthContext = createContext()
 
@@ -9,51 +10,55 @@ export function AuthProvider({ children }) {
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
-        supabase.auth.getSession().then(({ data: { session } }) => {
-            setUser(session?.user ?? null)
-            if (session?.user) fetchProfile(session.user.id)
-            else setLoading(false)
-        })
+        let isMounted = true
 
-        const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-            setUser(session?.user ?? null)
-            if (session?.user) {
-                fetchProfile(session.user.id)
+        async function initSession() {
+            const { data: { session } } = await supabase.auth.getSession()
+            if (!isMounted) return
+            const currentUser = session?.user ?? null
+            setUser(currentUser)
+            if (currentUser) {
+                const currentProfile = await fetchProfileForUser(currentUser.id)
+                setProfile(currentProfile)
             } else {
                 setProfile(null)
-                setLoading(false)
             }
+            setLoading(false)
+        }
+
+        initSession()
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
+            if (!isMounted) return
+            const currentUser = session?.user ?? null
+            setUser(currentUser)
+            if (currentUser) {
+                const currentProfile = await fetchProfileForUser(currentUser.id)
+                setProfile(currentProfile)
+            } else {
+                setProfile(null)
+            }
+            setLoading(false)
         })
 
-        return () => subscription.unsubscribe()
+        return () => {
+            isMounted = false
+            subscription.unsubscribe()
+        }
     }, [])
 
-    async function fetchProfile(userId) {
-        const { data } = await supabase
-            .from('profiles')
-            .select('*')
-            .eq('id', userId)
-            .single()
-        setProfile(data)
-        setLoading(false)
+    async function signUp(email, password, fullName, role = 'tenant') {
+        return signUpWithRole(email, password, fullName, role)
     }
 
-    async function signUp(email, password, fullName) {
-        const { error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: { data: { full_name: fullName } }
-        })
-        return { error }
-    }
-
-    async function signIn(email, password) {
-        const { error } = await supabase.auth.signInWithPassword({ email, password })
-        return { error }
+    async function signIn(email, password, role = 'tenant') {
+        return signInWithRole(email, password, role)
     }
 
     async function signOut() {
         await supabase.auth.signOut()
+        setUser(null)
+        setProfile(null)
     }
 
     return (

@@ -9,6 +9,7 @@ import TenantAuth from './pages/TenantAuth'
 
 export const tenantRoutes = [
   { path: '', element: <TenantHome /> },
+  { path: 'home', element: <TenantHome /> },
   { path: 'search', element: <SearchPage /> },
   { path: 'pg-details/:id', element: <PgDetails /> },
   { path: 'bed-selection', element: <BedSelection /> },
@@ -21,6 +22,7 @@ export const tenantRoutes = [
   { path: 'settings', element: <PlaceholderPage title="Settings" subtitle="Preferences" description="Adjust theme, language, privacy, and alert preferences." /> },
   { path: 'support', element: <PlaceholderPage title="Support" subtitle="Help center" description="Get support from the HomiePG team." /> },
   { path: 'about', element: <PlaceholderPage title="About" subtitle="About HomiePG" description="Learn more about our platform and values." /> },
+  { path: 'logout', element: <Navigate to="/" replace /> },
   { path: 'login', element: <TenantAuth title="Welcome back" subtitle="Sign in to continue your search" cta="Sign in" /> },
   { path: 'signup', element: <TenantAuth title="Create account" subtitle="Join thousands of tenants" cta="Create account" /> },
   { path: 'forgot-password', element: <TenantAuth title="Reset password" subtitle="We will help you recover access" cta="Send reset link" /> },

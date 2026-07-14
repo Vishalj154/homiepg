@@ -5,6 +5,7 @@ import AdminLogin from './pages/AdminLogin'
 
 export const adminRoutes = [
   { path: '', element: <AdminHome /> },
+  { path: 'dashboard', element: <AdminHome /> },
   { path: 'owners', element: <AdminPlaceholder title="Owners" subtitle="Owner management" description="Review owners, manage approvals, and oversee property activity." /> },
   { path: 'tenants', element: <AdminPlaceholder title="Tenants" subtitle="Tenant management" description="Track tenant profiles, status, and KYC verification." /> },
   { path: 'buildings', element: <AdminPlaceholder title="Buildings" subtitle="Building portfolio" description="Inspect occupancy, capacity, and overall building health." /> },
@@ -21,6 +22,7 @@ export const adminRoutes = [
   { path: 'notifications', element: <AdminPlaceholder title="Notifications" subtitle="Platform alerts" description="Send announcements and alerts to tenants and owners." /> },
   { path: 'settings', element: <AdminPlaceholder title="Settings" subtitle="Platform settings" description="Adjust global preferences and workflow controls." /> },
   { path: 'profile', element: <AdminPlaceholder title="Profile" subtitle="Admin profile" description="Manage your account and team access." /> },
+  { path: 'logout', element: <Navigate to="/" replace /> },
   { path: 'login', element: <AdminLogin /> },
   { path: 'forgot-password', element: <AdminLogin /> },
   { path: '*', element: <Navigate to="/admin" replace /> },
