@@ -40,8 +40,8 @@ export default function SearchPage() {
     const areaMatch = !area || pg.area?.toLowerCase().includes(area.toLowerCase())
     const rentMatch = rent === 'all' || (
       rent === 'under-12k' ? pg.rentValue < 12000 :
-      rent === '12k-15k' ? pg.rentValue >= 12000 && pg.rentValue <= 15000 :
-      rent === '15k-plus' ? pg.rentValue > 15000 : true
+        rent === '12k-15k' ? pg.rentValue >= 12000 && pg.rentValue <= 15000 :
+          rent === '15k-plus' ? pg.rentValue > 15000 : true
     )
     const genderMatch = gender === 'all' || pg.gender === gender
     const foodMatch = food === 'all' || pg.food === food

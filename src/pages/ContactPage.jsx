@@ -36,7 +36,12 @@ export default function ContactPage() {
           <p className="mt-4 text-sm leading-6 text-slate-400">Contact us for onboarding, demos, support, or partnership conversations.</p>
           <div className="mt-8 space-y-3 text-sm">
             <p>📍 42 MG Road, Bengaluru, India</p>
-            <p>✉️ hello@homiepg.com</p>
+            <p>
+              ✉️ Contact us through mail:{' '}
+              <a href="mailto:hello@homiepg.com" className="text-cyan-400 hover:underline">
+                hello@homiepg.com
+              </a>
+            </p>
             <p>📞 +91 98765 43210</p>
           </div>
         </div>

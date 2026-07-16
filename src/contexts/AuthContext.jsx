@@ -13,17 +13,22 @@ export function AuthProvider({ children }) {
         let isMounted = true
 
         async function initSession() {
-            const { data: { session } } = await supabase.auth.getSession()
-            if (!isMounted) return
-            const currentUser = session?.user ?? null
-            setUser(currentUser)
-            if (currentUser) {
-                const currentProfile = await fetchProfileForUser(currentUser.id)
-                setProfile(currentProfile)
-            } else {
-                setProfile(null)
+            try {
+                const { data: { session } } = await supabase.auth.getSession()
+                if (!isMounted) return
+                const currentUser = session?.user ?? null
+                setUser(currentUser)
+                if (currentUser) {
+                    const currentProfile = await fetchProfileForUser(currentUser.id)
+                    setProfile(currentProfile)
+                } else {
+                    setProfile(null)
+                }
+            } catch (err) {
+                console.error("Session init error:", err)
+            } finally {
+                if (isMounted) setLoading(false)
             }
-            setLoading(false)
         }
 
         initSession()

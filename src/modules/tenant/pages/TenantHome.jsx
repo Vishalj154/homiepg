@@ -96,7 +96,7 @@ export default function TenantHome() {
         </SectionCard>
 
         <div className="grid gap-6 lg:grid-cols-2">
-          <SectionCard title="Popular locations" subtitle="Trending neighborhoods"> 
+          <SectionCard title="Popular locations" subtitle="Trending neighborhoods">
             <div className="grid gap-3 sm:grid-cols-2">
               {['Koramangala', 'Indiranagar', 'HSR Layout', 'Marathahalli'].map((location) => (
                 <div key={location} className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-800/60">

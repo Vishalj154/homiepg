@@ -38,7 +38,7 @@ function AppRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={user ? <Navigate to={getRoleRedirectPath(role)} replace /> : <Home />} />
+      <Route path="/" element={<Home />} />
       <Route path="/login" element={user ? <Navigate to={getRoleRedirectPath(role)} replace /> : <Login />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/services" element={<ServicesPage />} />

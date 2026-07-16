@@ -7,6 +7,13 @@ import BookingPage from './pages/BookingPage'
 import PlaceholderPage from './pages/PlaceholderPage'
 import TenantAuth from './pages/TenantAuth'
 
+import TenantProfile from './pages/TenantProfile'
+import TenantBookings from './pages/TenantBookings'
+import TenantSaved from './pages/TenantSaved'
+import TenantPayments from './pages/TenantPayments'
+import TenantNotifications from './pages/TenantNotifications'
+import TenantSettings from './pages/TenantSettings'
+
 export const tenantRoutes = [
   { path: '', element: <TenantHome /> },
   { path: 'home', element: <TenantHome /> },
@@ -14,12 +21,12 @@ export const tenantRoutes = [
   { path: 'pg-details/:id', element: <PgDetails /> },
   { path: 'bed-selection', element: <BedSelection /> },
   { path: 'booking', element: <BookingPage /> },
-  { path: 'bookings', element: <PlaceholderPage title="Bookings" subtitle="Your reservation history" description="Track confirmed, pending, and completed stays in one place." /> },
-  { path: 'saved', element: <PlaceholderPage title="Saved PGs" subtitle="Saved properties" description="CollectPGs you love and compare them later." /> },
-  { path: 'payments', element: <PlaceholderPage title="My Payments" subtitle="Payment history" description="Review invoices, deposits, and rent transactions." /> },
-  { path: 'notifications', element: <PlaceholderPage title="Notifications" subtitle="Stay informed" description="Receive reminders, booking updates, and owner messages here." /> },
-  { path: 'profile', element: <PlaceholderPage title="Profile" subtitle="Personal profile" description="Manage your details, documents, and preferences." /> },
-  { path: 'settings', element: <PlaceholderPage title="Settings" subtitle="Preferences" description="Adjust theme, language, privacy, and alert preferences." /> },
+  { path: 'bookings', element: <TenantBookings /> },
+  { path: 'saved', element: <TenantSaved /> },
+  { path: 'payments', element: <TenantPayments /> },
+  { path: 'notifications', element: <TenantNotifications /> },
+  { path: 'profile', element: <TenantProfile /> },
+  { path: 'settings', element: <TenantSettings /> },
   { path: 'support', element: <PlaceholderPage title="Support" subtitle="Help center" description="Get support from the HomiePG team." /> },
   { path: 'about', element: <PlaceholderPage title="About" subtitle="About HomiePG" description="Learn more about our platform and values." /> },
   { path: 'logout', element: <Navigate to="/" replace /> },

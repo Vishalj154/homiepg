@@ -21,6 +21,15 @@ export default function AboutPage() {
             <p className="mt-3 text-sm text-slate-400">Because manual spreadsheets, missed rent, and scattered communication create avoidable stress for everyone involved.</p>
           </div>
         </div>
+        <div className="mt-4 rounded-3xl border border-white/10 bg-slate-900/80 p-6 text-center">
+          <h2 className="text-xl font-semibold">Get in Touch</h2>
+          <p className="mt-3 text-sm text-slate-400">
+            Have questions or want to partner with us? Reach out directly via email.
+          </p>
+          <a href="mailto:hello@homiepg.com" className="mt-4 inline-block rounded-full bg-cyan-600 px-6 py-2 text-sm font-medium text-white hover:bg-cyan-500">
+            Contact us through mail
+          </a>
+        </div>
       </div>
     </div>
   )
