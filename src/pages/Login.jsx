@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import { supabase } from '../lib/supabase'
@@ -20,13 +20,24 @@ export default function Login() {
     const [error, setError] = useState('')
     const [loading, setLoading] = useState(false)
 
-    const { signIn, signUp } = useAuth()
+    // Guard: prevents auto-redirect while sign-in/role-check is in progress
+    const submittingRef = useRef(false)
+
+    const { user, profile, loading: authLoading, signIn, signUp } = useAuth()
     const navigate = useNavigate()
+
+    // Auto-redirect if already logged in (but NOT during an active submission)
+    useEffect(() => {
+        if (user && profile && !authLoading && !submittingRef.current) {
+            navigate(getRoleRedirectPath(profile.role), { replace: true })
+        }
+    }, [user, profile, authLoading])
 
     async function handleSubmit(e) {
         e.preventDefault()
         setError('')
         setLoading(true)
+        submittingRef.current = true
 
         if (isSignUp) {
             const { error } = await signUp(email, password, fullName, selectedRole)
@@ -37,13 +48,16 @@ export default function Login() {
         } else {
             const { error } = await signIn(email, password, selectedRole)
             if (error) setError(error.message)
-            else navigate(getRoleRedirectPath(selectedRole))
+            else navigate(getRoleRedirectPath(selectedRole), { replace: true })
         }
 
+        submittingRef.current = false
         setLoading(false)
     }
 
     async function handleGoogle() {
+        // Save role before redirect so AuthContext can use it to create the profile
+        localStorage.setItem('homiepg_pending_role', selectedRole)
         const { error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
             options: {

@@ -39,15 +39,15 @@ function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/login" element={user ? <Navigate to={getRoleRedirectPath(role)} replace /> : <Login />} />
+      <Route path="/login" element={<Login />} />
       <Route path="/about" element={<AboutPage />} />
       <Route path="/services" element={<ServicesPage />} />
       <Route path="/contact" element={<ContactPage />} />
 
       <Route path="/dashboard" element={<ProtectedRoute allowedRoles={['owner']}><Dashboard /></ProtectedRoute>} />
-      <Route path="/owner/*" element={<RoleGuard allowedRoles={['owner']} redirectTo={getRoleRedirectPath(role)}><OwnerModule /></RoleGuard>} />
-      <Route path="/tenant/*" element={<RoleGuard allowedRoles={['tenant']} redirectTo={getRoleRedirectPath(role)}><TenantModule /></RoleGuard>} />
-      <Route path="/admin/*" element={<RoleGuard allowedRoles={['super_admin']} redirectTo={getRoleRedirectPath(role)}><AdminModule /></RoleGuard>} />
+      <Route path="/owner/*" element={<RoleGuard allowedRoles={['owner']} redirectTo="/login"><OwnerModule /></RoleGuard>} />
+      <Route path="/tenant/*" element={<RoleGuard allowedRoles={['tenant']} redirectTo="/login"><TenantModule /></RoleGuard>} />
+      <Route path="/admin/*" element={<RoleGuard allowedRoles={['super_admin']} redirectTo="/login"><AdminModule /></RoleGuard>} />
       <Route path="/buildings" element={<ProtectedRoute allowedRoles={['owner']}><Buildings /></ProtectedRoute>} />
       <Route path="/buildings/:id" element={<ProtectedRoute allowedRoles={['owner']}><BuildingDetail /></ProtectedRoute>} />
       <Route path="/tenants" element={<ProtectedRoute allowedRoles={['owner']}><Tenants /></ProtectedRoute>} />

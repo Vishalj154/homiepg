@@ -1,8 +1,34 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
-import { fetchProfileForUser, signInWithRole, signUpWithRole } from '../services/auth.service'
+import { fetchProfileForUser, signInWithRole, signUpWithRole, normalizeRole } from '../services/auth.service'
+import { upsertProfile } from '../services/profile.service'
 
 const AuthContext = createContext()
+
+/**
+ * Ensures a profile row exists for the given user.
+ * If not, creates one using the pending OAuth role from localStorage,
+ * user_metadata, or defaults to 'tenant'.
+ */
+async function ensureProfile(user) {
+    let profile = await fetchProfileForUser(user.id)
+    if (profile) return profile
+
+    // Determine role: localStorage (set before OAuth redirect) > user_metadata > default
+    const pendingRole = localStorage.getItem('homiepg_pending_role')
+    localStorage.removeItem('homiepg_pending_role')
+    const role = normalizeRole(pendingRole || user.user_metadata?.role || 'tenant')
+    const fullName = user.user_metadata?.full_name || user.user_metadata?.name || ''
+
+    const { data } = await upsertProfile({
+        id: user.id,
+        full_name: fullName,
+        email: user.email,
+        role,
+    })
+
+    return data || await fetchProfileForUser(user.id)
+}
 
 export function AuthProvider({ children }) {
     const [user, setUser] = useState(null)
@@ -19,7 +45,7 @@ export function AuthProvider({ children }) {
                 const currentUser = session?.user ?? null
                 setUser(currentUser)
                 if (currentUser) {
-                    const currentProfile = await fetchProfileForUser(currentUser.id)
+                    const currentProfile = await ensureProfile(currentUser)
                     setProfile(currentProfile)
                 } else {
                     setProfile(null)
@@ -38,7 +64,7 @@ export function AuthProvider({ children }) {
             const currentUser = session?.user ?? null
             setUser(currentUser)
             if (currentUser) {
-                const currentProfile = await fetchProfileForUser(currentUser.id)
+                const currentProfile = await ensureProfile(currentUser)
                 setProfile(currentProfile)
             } else {
                 setProfile(null)
@@ -75,4 +101,4 @@ export function AuthProvider({ children }) {
 
 export function useAuth() {
     return useContext(AuthContext)
-}
+}
