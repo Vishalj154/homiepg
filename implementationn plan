@@ -1,0 +1,59 @@
+Fully Implement Tenant Booking Flow & Admin Dashboard
+This plan outlines the steps to complete the HomiePG application by making the remaining UI-only features fully functional and connected to Supabase. This primarily involves the Tenant booking checkout flow and the Super Admin dashboard.
+
+Proposed Changes
+Database Updates
+I will create a new file containing the missing policies and functions required for these features.
+
+[NEW] 
+02_admin_and_booking_updates.sql
+Add Row Level Security (RLS) policies allowing users with the super_admin role to access and manage all tables (owners, tenants, buildings, bookings, payments, etc.).
+Create SQL Views or RPCs to aggregate dashboard statistics for the Admin panel (e.g., total revenue, system health, active bookings).
+Tenant Module
+The tenant module needs its booking flow hooked up to real building data and the bookings table.
+
+[MODIFY] 
+routes.jsx
+Update paths to accept parameters: bed-selection/:id and booking/:bedId.
+[MODIFY] 
+PgDetails.jsx
+Update the "Bed X" buttons to route to /tenant/bed-selection/${id}.
+[MODIFY] 
+BedSelection.jsx
+Fetch real beds for the specific building from Supabase (rooms and beds tables).
+Disable buttons for beds that are occupied or reserved.
+Update the "Continue to booking" button to route to the booking page with the selected bedId.
+[MODIFY] 
+BookingPage.jsx
+Fetch the specific bed and building details based on the URL parameter to show an accurate booking summary (rent, deposit, property name).
+Implement the "Reserve bed" function: insert a new row into public.bookings (status: pending) and redirect to the /tenant/bookings page.
+Admin Module
+The admin module is currently a UI placeholder. We need to build a data service and hook up the pages.
+
+[NEW] 
+adminService.js
+Create a service to fetch all platform data: owners, tenants, buildings, beds, bookings, payments, and aggregated stats.
+[MODIFY] 
+AdminHome.jsx
+Remove mock data imports.
+Fetch real statistics, revenue trends, recent bookings, and latest owners using adminService.js.
+[NEW] Generic Data Table Pages
+Instead of creating 15+ completely custom pages from scratch, I will create a reusable data-table component to rapidly implement functional list-views for the admin panel.
+
+Create /pages/AdminOwners.jsx (fetch and list owners + profiles)
+Create /pages/AdminTenants.jsx (fetch and list tenants + profiles)
+Create /pages/AdminBuildings.jsx (fetch and list buildings)
+Create /pages/AdminBookings.jsx (fetch and list bookings and update statuses)
+Update src/modules/admin/routes.jsx to map these components to their respective routes. The remaining lesser-used routes (e.g. KYC, Support) will be mapped to simple generic lists.
+User Review Required
+WARNING
+
+Building out 15 separate admin pages (Owners, Tenants, Rooms, Beds, Revenue, etc.) as highly complex individual modules is a massive undertaking. To deliver a fully working project quickly, I will use a Generic Data Table layout for the Admin entity pages (which is standard for admin dashboards) so that every route works and shows real data. Let me know if you prefer a different approach.
+
+Verification Plan
+Automated Tests
+None required.
+Manual Verification
+Open the SQL file provided and run it in the Supabase SQL editor.
+Sign in as a Tenant, navigate to a PG, select a bed, and confirm the booking is created.
+Sign in as a Super Admin and verify the dashboard shows real statistics and that the data tables list real owners and tenants.

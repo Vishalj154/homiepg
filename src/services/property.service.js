@@ -79,3 +79,23 @@ export async function getBuildingDetails(id) {
 
   return { data, error }
 }
+
+export async function getBedDetails(bedId) {
+  const { data, error } = await supabase
+    .from('beds')
+    .select(`
+      *,
+      room:rooms (
+        id,
+        room_number,
+        building:buildings (
+          id,
+          name
+        )
+      )
+    `)
+    .eq('id', bedId)
+    .single()
+
+  return { data, error }
+}

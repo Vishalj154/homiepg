@@ -73,7 +73,7 @@ export default function PgDetails() {
           <SectionCard title="Available beds" subtitle="Reserve your preferred bed">
             <div className="flex gap-3">
               {Array.from({ length: Math.min(pg.vacantBeds, 4) }).map((_, index) => (
-                <button key={index} className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium dark:border-slate-700" onClick={() => window.location.assign('/tenant/bed-selection')}>Bed {index + 1}</button>
+                <button key={index} className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium dark:border-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800" onClick={() => window.location.assign(`/tenant/bed-selection/${id}`)}>Bed {index + 1}</button>
               ))}
             </div>
           </SectionCard>

@@ -2,16 +2,20 @@ import { Navigate } from 'react-router-dom'
 import AdminHome from './pages/AdminHome'
 import AdminPlaceholder from './pages/AdminPlaceholder'
 import AdminLogin from './pages/AdminLogin'
+import AdminOwners from './pages/AdminOwners'
+import AdminTenants from './pages/AdminTenants'
+import AdminBuildings from './pages/AdminBuildings'
+import AdminBookings from './pages/AdminBookings'
 
 export const adminRoutes = [
   { path: '', element: <AdminHome /> },
   { path: 'dashboard', element: <AdminHome /> },
-  { path: 'owners', element: <AdminPlaceholder title="Owners" subtitle="Owner management" description="Review owners, manage approvals, and oversee property activity." /> },
-  { path: 'tenants', element: <AdminPlaceholder title="Tenants" subtitle="Tenant management" description="Track tenant profiles, status, and KYC verification." /> },
-  { path: 'buildings', element: <AdminPlaceholder title="Buildings" subtitle="Building portfolio" description="Inspect occupancy, capacity, and overall building health." /> },
+  { path: 'owners', element: <AdminOwners /> },
+  { path: 'tenants', element: <AdminTenants /> },
+  { path: 'buildings', element: <AdminBuildings /> },
   { path: 'rooms', element: <AdminPlaceholder title="Rooms" subtitle="Room inventory" description="View room wise occupancy and bed availability." /> },
   { path: 'beds', element: <AdminPlaceholder title="Beds" subtitle="Bed management" description="Monitor bed status across all buildings and rooms." /> },
-  { path: 'bookings', element: <AdminPlaceholder title="Bookings" subtitle="Booking management" description="Review pending and completed reservations." /> },
+  { path: 'bookings', element: <AdminBookings /> },
   { path: 'occupancy', element: <AdminPlaceholder title="Occupancy" subtitle="Occupancy insights" description="Compare occupancy and utilization across regions." /> },
   { path: 'revenue', element: <AdminPlaceholder title="Revenue" subtitle="Revenue reports" description="Monitor bookings, commissions, and platform earnings." /> },
   { path: 'subscriptions', element: <AdminPlaceholder title="Subscriptions" subtitle="Plans and usage" description="View free, starter, pro, and enterprise tiers." /> },
